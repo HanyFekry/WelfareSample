@@ -1,0 +1,6 @@
+@WelfareSample_HostAddress = http://localhost:5289
+
+GET {{WelfareSample_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

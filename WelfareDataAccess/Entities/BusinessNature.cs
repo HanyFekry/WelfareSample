@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WelfareDataAccess.Entities;
+﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
 /// <summary>
 /// Table storing business natures
 /// </summary>

@@ -3,37 +3,36 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class OccupationConfiguration : IEntityTypeConfiguration<Occupation>
 {
-    public partial class OccupationConfiguration : IEntityTypeConfiguration<Occupation>
+    public void Configure(EntityTypeBuilder<Occupation> entity)
     {
-        public void Configure(EntityTypeBuilder<Occupation> entity)
-        {
-            entity.ToTable("Occupation");
+        entity.ToTable("Occupation");
 
-            entity.Property(e => e.OccupationId)
-                .ValueGeneratedNever()
-                .HasComment("Unique identifier for each occupation record")
-                .HasColumnName("OccupationID");
-            entity.Property(e => e.Code)
-                .HasMaxLength(30)
-                .HasComment("Code representing the occupation");
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.Text)
-                .HasMaxLength(50)
-                .HasComment("English text description of the occupation");
-            entity.Property(e => e.Text2)
-                .HasMaxLength(50)
-                .HasComment("Arabic text description of the occupation");
+        entity.Property(e => e.OccupationId)
+            .ValueGeneratedNever()
+            .HasComment("Unique identifier for each occupation record")
+            .HasColumnName("OccupationID");
+        entity.Property(e => e.Code)
+            .HasMaxLength(30)
+            .HasComment("Code representing the occupation");
+        entity.Property(e => e.IsActive).HasDefaultValue(true);
+        entity.Property(e => e.Text)
+            .HasMaxLength(50)
+            .HasComment("English text description of the occupation");
+        entity.Property(e => e.Text2)
+            .HasMaxLength(50)
+            .HasComment("Arabic text description of the occupation");
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<Occupation> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<Occupation> entity);
 }

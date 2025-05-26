@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WelfareDataAccess.Entities;
+﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
 public class RequestStatus
 {
     /// <summary>
@@ -24,6 +21,6 @@ public class RequestStatus
     /// </summary>
     public string? Text2 { get; set; }
 
-    public ICollection<Request> Requests { get; set; } = new List<Request>();
+    public ICollection<WelfareRequest> WelfareRequests { get; set; } = new List<WelfareRequest>();
 }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WelfareDataAccess.Entities;
+﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
 public class Labor
 {
     public long LaborId { get; set; }
@@ -37,6 +34,7 @@ public class Labor
     public int? InsurancePeriod { get; set; }
 
     public DateOnly? DeathDate { get; set; }
+    //public bool HasFullDisability { get; set; }
 
     /// <summary>
     /// the worker&apos;s status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)

@@ -3,58 +3,47 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class MedicalWelfareRequestConfiguration : IEntityTypeConfiguration<MedicalWelfareRequest>
 {
-    public partial class MedicalWelfareRequestConfiguration : IEntityTypeConfiguration<MedicalWelfareRequest>
+    public void Configure(EntityTypeBuilder<MedicalWelfareRequest> entity)
     {
-        public void Configure(EntityTypeBuilder<MedicalWelfareRequest> entity)
-        {
-            //entity.HasKey(e => e.RequestId);
+        entity.HasKey(e => e.RequestId);
 
-            entity.ToTable("MedicalWelfareRequest");
+        entity.ToTable("MedicalWelfareRequest");
 
-            //entity.Property(e => e.RequestId).ValueGeneratedNever();
-            entity.Property(e => e.BeneficiaryIban)
-                .HasMaxLength(120)
-                .HasColumnName("BeneficiaryIBAN");
-            entity.Property(e => e.BeneficiaryName).HasMaxLength(120);
-            entity.Property(e => e.BeneficiaryNid)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("BeneficiaryNId");
-            entity.Property(e => e.Description).HasMaxLength(250);
-            entity.Property(e => e.BeneficiaryTypeId).HasColumnName("FK_BeneficiaryTypeId");
-            entity.Property(e => e.MedicalServiceProviderId).HasColumnName("FK_MedicalServiceProviderId");
+        entity.HasIndex(e => e.BeneficiaryTypeId, "IX_MedicalWelfareRequest_FK_BeneficiaryTypeId");
 
-            entity.HasOne(d => d.BeneficiaryType)
-                .WithMany(
-                    p => p.MedicalWelfareRequests
-                )
-                .HasForeignKey(d => d.BeneficiaryTypeId);
+        entity.HasIndex(e => e.MedicalServiceProviderId, "IX_MedicalWelfareRequest_FK_MedicalServiceProviderId");
 
-            entity.HasOne(d => d.MedicalServiceProvider)
-                .WithMany(
-                    p => p.MedicalWelfareRequests
-                )
-                .HasForeignKey(d => d.MedicalServiceProviderId);
+        entity.Property(e => e.RequestId).ValueGeneratedNever();
+        entity.Property(e => e.BeneficiaryIban)
+            .HasMaxLength(120)
+            .HasColumnName("BeneficiaryIBAN");
+        entity.Property(e => e.BeneficiaryName).HasMaxLength(120);
+        entity.Property(e => e.BeneficiaryNid).HasColumnName("BeneficiaryNId");
+        entity.Property(e => e.Description).HasMaxLength(250);
+        entity.Property(e => e.BeneficiaryTypeId).HasColumnName("FK_BeneficiaryTypeId");
+        entity.Property(e => e.MedicalServiceProviderId).HasColumnName("FK_MedicalServiceProviderId");
 
-            //entity.HasOne(d => d.Request)
-            //    .WithOne(
-            //        p => p.MedicalWelfareRequest
-            //    )
-            //    .HasForeignKey<MedicalWelfareRequest>(d => d.RequestId)
-            //    .OnDelete(DeleteBehavior.Cascade)
-            //    .HasConstraintName("FK_MedicalWelfareRequest_Request");
+        entity.HasOne(d => d.BeneficiaryType)
+            .WithMany(
+                p => p.MedicalWelfareRequests
+            ).HasForeignKey(d => d.BeneficiaryTypeId);
 
-            OnConfigurePartial(entity);
-        }
+        entity.HasOne(d => d.MedicalServiceProvider)
+            .WithMany(
+                p => p.MedicalWelfareRequests
+            ).HasForeignKey(d => d.MedicalServiceProviderId);
 
-        partial void OnConfigurePartial(EntityTypeBuilder<MedicalWelfareRequest> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<MedicalWelfareRequest> entity);
 }

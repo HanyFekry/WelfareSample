@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WelfareDataAccess.Entities;
+﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
 public class RequestType
 {
     /// <summary>
@@ -23,5 +20,9 @@ public class RequestType
     /// Arabic text description of the request type
     /// </summary>
     public string? Text2 { get; set; }
+
+    public bool IsMemorandum { get; set; }
+
+    public ICollection<Memorandum> Memoranda { get; set; } = new List<Memorandum>();
 }
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WelfareDataAccess.Entities;
+﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
 public class WelfareType
 {
     /// <summary>
@@ -30,10 +27,10 @@ public class WelfareType
 
     public byte? MaximumLimit { get; set; }
 
-    public ICollection<AttachmentType> AttachmentTypes { get; set; } = new List<AttachmentType>();
-
     public WelfareCategory WelfareCategory { get; set; } = null!;
 
-    public ICollection<Request> Requests { get; set; } = new List<Request>();
+    public ICollection<WelfareRequest> WelfareRequests { get; set; } = new List<WelfareRequest>();
+
+    public ICollection<AttachmentType> AttachmentTypes { get; set; } = new List<AttachmentType>();
 }
 

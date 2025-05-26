@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using S3.MoL.WelfareManagement.Domain.Enums;
 
-namespace WelfareDataAccess.Entities;
+namespace S3.MoL.WelfareManagement.Domain.Entities;
 /// <summary>
 /// Table storing attachment types
 /// </summary>
@@ -13,9 +12,9 @@ public class AttachmentType
     public int AttachmentTypeId { get; set; }
 
     /// <summary>
-    /// Foreign key to the LaborCareType table
+    /// Enum value(WelfareRequest,Memo,Batch)
     /// </summary>
-    public int WelfareTypeId { get; set; }
+    public AttachmentEntityType AttachmentEntityType { get; set; }
 
     /// <summary>
     /// Code representing the attachment type
@@ -52,8 +51,12 @@ public class AttachmentType
     /// </summary>
     public int MaxFileCount { get; set; }
 
-    public WelfareType WelfareType { get; set; } = null!;
+    public ICollection<BatchRequestAttachment> BatchRequestAttachments { get; set; } = new List<BatchRequestAttachment>();
 
-    public ICollection<RequestAttachment> RequestAttachments { get; set; } = new List<RequestAttachment>();
+    public ICollection<MemorandumAttachment> MemorandumAttachments { get; set; } = new List<MemorandumAttachment>();
+
+    public ICollection<WelfareRequestAttachment> WelfareRequestAttachments { get; set; } = new List<WelfareRequestAttachment>();
+
+    public ICollection<WelfareType> WelfareTypes { get; set; } = new List<WelfareType>();
 }
 

@@ -1,12 +1,11 @@
-﻿namespace WelfareDataAccess.Entities;
-public class DisabilityWelfareRequest : Request
+﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
+public class DisabilityWelfareRequest : WelfareRequest
 {
-    //public long RequestId { get; set; }
+    public long RequestId { get; set; }
 
     public DateTime EventDate { get; set; }
 
     public decimal? DisabilityRatio { get; set; }
-
-    //public Request Request { get; set; } = null!;
+    public string? Description { get; set; }
 }
 

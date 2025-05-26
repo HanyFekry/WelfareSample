@@ -3,45 +3,61 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class WelfareTypeConfiguration : IEntityTypeConfiguration<WelfareType>
 {
-    public partial class WelfareTypeConfiguration : IEntityTypeConfiguration<WelfareType>
+    public void Configure(EntityTypeBuilder<WelfareType> entity)
     {
-        public void Configure(EntityTypeBuilder<WelfareType> entity)
-        {
-            entity.ToTable("WelfareType");
+        entity.ToTable("WelfareType");
 
-            entity.Property(e => e.WelfareTypeId)
-                .ValueGeneratedNever()
-                .HasComment("Unique identifier for each Welfare type")
-                .HasColumnName("WelfareTypeID");
-            entity.Property(e => e.Code)
-                .HasMaxLength(30)
-                .HasComment("Code representing the Welfare type");
-            entity.Property(e => e.WelfareCategoryId).HasColumnName("FK_WelfareCategoryId");
-            entity.Property(e => e.Text)
-                .HasMaxLength(50)
-                .HasComment("English text description of the Welfare type");
-            entity.Property(e => e.Text2)
-                .HasMaxLength(50)
-                .HasComment("Arabic text description of the Welfare type");
-            entity.Property(e => e.WelfareAmount).HasColumnType("decimal(8, 2)");
+        entity.HasIndex(e => e.WelfareCategoryId, "IX_WelfareType_FK_WelfareCategoryId");
 
-            entity.HasOne(d => d.WelfareCategory)
-                .WithMany(
-                    p => p.WelfareTypes
-                )
-                .HasForeignKey(d => d.WelfareCategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+        entity.Property(e => e.WelfareTypeId)
+            .ValueGeneratedNever()
+            .HasComment("Unique identifier for each Welfare type")
+            .HasColumnName("WelfareTypeID");
+        entity.Property(e => e.Code)
+            .HasMaxLength(30)
+            .HasComment("Code representing the Welfare type");
+        entity.Property(e => e.WelfareCategoryId).HasColumnName("FK_WelfareCategoryId");
+        entity.Property(e => e.Text)
+            .HasMaxLength(50)
+            .HasComment("English text description of the Welfare type");
+        entity.Property(e => e.Text2)
+            .HasMaxLength(50)
+            .HasComment("Arabic text description of the Welfare type");
+        entity.Property(e => e.WelfareAmount).HasColumnType("decimal(8, 2)");
 
-            OnConfigurePartial(entity);
-        }
+        entity.HasOne(d => d.WelfareCategory)
+            .WithMany(
+                p => p.WelfareTypes
+            ).HasForeignKey(d => d.WelfareCategoryId);
 
-        partial void OnConfigurePartial(EntityTypeBuilder<WelfareType> entity);
+        entity.HasMany(d => d.AttachmentTypes).WithMany(p => p.WelfareTypes)
+            .UsingEntity<Dictionary<string, object>>(
+                "WelfareTypesAttachmentTypes",
+                r => r.HasOne<AttachmentType>().WithMany()
+                    .HasForeignKey("AttachmentTypeId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                l => l.HasOne<WelfareType>().WithMany()
+                    .HasForeignKey("WelfareTypeId")
+                    .OnDelete(DeleteBehavior.Cascade),
+                j =>
+                {
+                    j.HasKey("WelfareTypeId", "AttachmentTypeId");
+                    j.ToTable("WelfareTypesAttachmentTypes");
+                    j.IndexerProperty<int>("WelfareTypeId").HasColumnName("WelfareTypeID");
+                    j.IndexerProperty<int>("AttachmentTypeId").HasColumnName("AttachmentTypeID");
+                });
+
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<WelfareType> entity);
 }

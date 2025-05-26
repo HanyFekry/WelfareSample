@@ -3,36 +3,36 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class RequestTypeConfiguration : IEntityTypeConfiguration<RequestType>
 {
-    public partial class RequestTypeConfiguration : IEntityTypeConfiguration<RequestType>
+    public void Configure(EntityTypeBuilder<RequestType> entity)
     {
-        public void Configure(EntityTypeBuilder<RequestType> entity)
-        {
-            entity.ToTable("RequestType");
+        entity.ToTable("RequestType");
 
-            entity.Property(e => e.RequestTypeId)
-                .ValueGeneratedNever()
-                .HasComment("Unique identifier for each request type")
-                .HasColumnName("RequestTypeID");
-            entity.Property(e => e.Code)
-                .HasMaxLength(30)
-                .HasComment("Code representing the request type");
-            entity.Property(e => e.Text)
-                .HasMaxLength(50)
-                .HasComment("English text description of the request type");
-            entity.Property(e => e.Text2)
-                .HasMaxLength(50)
-                .HasComment("Arabic text description of the request type");
+        entity.Property(e => e.RequestTypeId)
+            .ValueGeneratedNever()
+            .HasComment("Unique identifier for each request type")
+            .HasColumnName("RequestTypeID");
+        entity.Property(e => e.Code)
+            .HasMaxLength(30)
+            .HasComment("Code representing the request type");
+        entity.Property(e => e.Text)
+            .HasMaxLength(50)
+            .HasComment("English text description of the request type");
+        entity.Property(e => e.Text2)
+            .HasMaxLength(50)
+            .HasComment("Arabic text description of the request type");
+        entity.Property(e => e.IsMemorandum).IsRequired();
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<RequestType> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<RequestType> entity);
 }

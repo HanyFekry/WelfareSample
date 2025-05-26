@@ -3,27 +3,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class BeneficiaryTypeConfiguration : IEntityTypeConfiguration<BeneficiaryType>
 {
-    public partial class BeneficiaryTypeConfiguration : IEntityTypeConfiguration<BeneficiaryType>
+    public void Configure(EntityTypeBuilder<BeneficiaryType> entity)
     {
-        public void Configure(EntityTypeBuilder<BeneficiaryType> entity)
-        {
-            entity.ToTable("BeneficiaryType");
+        entity.ToTable("BeneficiaryType");
 
-            entity.Property(e => e.BeneficiaryTypeId).ValueGeneratedNever();
-            entity.Property(e => e.Code).HasMaxLength(30);
-            entity.Property(e => e.Text).HasMaxLength(50);
-            entity.Property(e => e.Text2).HasMaxLength(50);
+        entity.Property(e => e.BeneficiaryTypeId).ValueGeneratedNever();
+        entity.Property(e => e.Code).HasMaxLength(30);
+        entity.Property(e => e.Text).HasMaxLength(50);
+        entity.Property(e => e.Text2).HasMaxLength(50);
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<BeneficiaryType> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<BeneficiaryType> entity);
 }

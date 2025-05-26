@@ -3,36 +3,35 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class NotificationReceiverTypeConfiguration : IEntityTypeConfiguration<NotificationReceiverType>
 {
-    public partial class NotificationReceiverTypeConfiguration : IEntityTypeConfiguration<NotificationReceiverType>
+    public void Configure(EntityTypeBuilder<NotificationReceiverType> entity)
     {
-        public void Configure(EntityTypeBuilder<NotificationReceiverType> entity)
-        {
-            entity.ToTable("NotificationReceiverType");
+        entity.ToTable("NotificationReceiverType");
 
-            entity.Property(e => e.NotificationReceiverTypeId)
-                .ValueGeneratedNever()
-                .HasComment("A unique identifier for each notification receiver type.")
-                .HasColumnName("NotificationReceiverTypeID");
-            entity.Property(e => e.Code)
-                .HasMaxLength(30)
-                .HasComment("A unique code representing the notification receiver type.");
-            entity.Property(e => e.Text)
-                .HasMaxLength(50)
-                .HasComment("The English description or name of the notification receiver type.");
-            entity.Property(e => e.Text2)
-                .HasMaxLength(50)
-                .HasComment("An optional Arabic description or additional information for the notification receiver type.");
+        entity.Property(e => e.NotificationReceiverTypeId)
+            .ValueGeneratedNever()
+            .HasComment("A unique identifier for each notification receiver type.")
+            .HasColumnName("NotificationReceiverTypeID");
+        entity.Property(e => e.Code)
+            .HasMaxLength(30)
+            .HasComment("A unique code representing the notification receiver type.");
+        entity.Property(e => e.Text)
+            .HasMaxLength(50)
+            .HasComment("The English description or name of the notification receiver type.");
+        entity.Property(e => e.Text2)
+            .HasMaxLength(50)
+            .HasComment("An optional Arabic description or additional information for the notification receiver type.");
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<NotificationReceiverType> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<NotificationReceiverType> entity);
 }

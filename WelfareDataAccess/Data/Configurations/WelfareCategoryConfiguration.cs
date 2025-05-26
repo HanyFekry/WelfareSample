@@ -3,26 +3,25 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class WelfareCategoryConfiguration : IEntityTypeConfiguration<WelfareCategory>
 {
-    public partial class WelfareCategoryConfiguration : IEntityTypeConfiguration<WelfareCategory>
+    public void Configure(EntityTypeBuilder<WelfareCategory> entity)
     {
-        public void Configure(EntityTypeBuilder<WelfareCategory> entity)
-        {
-            entity.ToTable("WelfareCategory", tb => tb.HasComment("Monetary or "));
+        entity.ToTable("WelfareCategory", tb => tb.HasComment("Monetary or "));
 
-            entity.Property(e => e.Code).HasMaxLength(30);
-            entity.Property(e => e.Text).HasMaxLength(50);
-            entity.Property(e => e.Text2).HasMaxLength(50);
+        entity.Property(e => e.Code).HasMaxLength(30);
+        entity.Property(e => e.Text).HasMaxLength(50);
+        entity.Property(e => e.Text2).HasMaxLength(50);
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<WelfareCategory> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<WelfareCategory> entity);
 }

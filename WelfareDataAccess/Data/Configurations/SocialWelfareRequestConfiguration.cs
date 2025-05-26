@@ -3,53 +3,46 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class SocialWelfareRequestConfiguration : IEntityTypeConfiguration<SocialWelfareRequest>
 {
-    public partial class SocialWelfareRequestConfiguration : IEntityTypeConfiguration<SocialWelfareRequest>
+    public void Configure(EntityTypeBuilder<SocialWelfareRequest> entity)
     {
-        public void Configure(EntityTypeBuilder<SocialWelfareRequest> entity)
-        {
-            //entity.HasKey(e => e.RequestId);
+        //entity.HasKey(e => e.RequestId);
 
-            entity.ToTable("SocialWelfareRequest");
+        entity.ToTable("SocialWelfareRequest");
 
-            //entity.Property(e => e.RequestId).ValueGeneratedNever();
-            entity.Property(e => e.RelativeRelationshipId).HasColumnName("FK_RelativeRelationshipId");
-            entity.Property(e => e.RequesterRelevanceId).HasColumnName("FK_RequesterRelevanceId");
-            entity.Property(e => e.NationalId)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.RequesterName).HasMaxLength(60);
+        entity.HasIndex(e => e.RelativeRelationshipId, "IX_SocialWelfareRequest_FK_RelativeRelationshipId");
 
-            entity.HasOne(d => d.RelativeRelationship)
-                .WithMany(
-                    p => p.SocialWelfareRequests
-                )
-                .HasForeignKey(d => d.RelativeRelationshipId);
+        entity.HasIndex(e => e.RequesterRelevanceId, "IX_SocialWelfareRequest_FK_RequesterRelevanceId");
 
-            entity.HasOne(d => d.RequesterRelevance)
-                .WithMany(
-                    p => p.SocialWelfareRequests
-                )
-                .HasForeignKey(d => d.RequesterRelevanceId);
+        entity.Property(e => e.RequestId).ValueGeneratedNever();
+        entity.Property(e => e.RelativeRelationshipId).HasColumnName("FK_RelativeRelationshipId");
+        entity.Property(e => e.RequesterRelevanceId).HasColumnName("FK_RequesterRelevanceId");
+        entity.Property(e => e.NationalId)
+            .HasMaxLength(14)
+            .IsUnicode(false)
+            .IsFixedLength();
+        entity.Property(e => e.RequesterName).HasMaxLength(60);
 
-            //entity.HasOne(d => d.Request)
-            //    .WithOne(
-            //        p => p.SocialWelfareRequest
-            //    )
-            //    .HasForeignKey<SocialWelfareRequest>(d => d.RequestId)
-            //    .OnDelete(DeleteBehavior.Cascade)
-            //    .HasConstraintName("FK_SocialWelfareRequest_Request");
+        entity.HasOne(d => d.RelativeRelationship)
+            .WithMany(
+                p => p.SocialWelfareRequests
+            ).HasForeignKey(d => d.RelativeRelationshipId);
 
-            OnConfigurePartial(entity);
-        }
+        entity.HasOne(d => d.RequesterRelevance)
+            .WithMany(
+                p => p.SocialWelfareRequests
+            ).HasForeignKey(d => d.RequesterRelevanceId);
 
-        partial void OnConfigurePartial(EntityTypeBuilder<SocialWelfareRequest> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<SocialWelfareRequest> entity);
 }

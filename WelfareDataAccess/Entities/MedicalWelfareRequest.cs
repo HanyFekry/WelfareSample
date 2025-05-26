@@ -1,7 +1,7 @@
-﻿namespace WelfareDataAccess.Entities;
-public class MedicalWelfareRequest : Request
+﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
+public class MedicalWelfareRequest
 {
-    //public long RequestId { get; set; }
+    public long RequestId { get; set; }
 
     public int? MedicalServiceProviderId { get; set; }
 
@@ -20,7 +20,5 @@ public class MedicalWelfareRequest : Request
     public BeneficiaryType? BeneficiaryType { get; set; }
 
     public MedicalServiceProvider? MedicalServiceProvider { get; set; }
-
-    //public Request Request { get; set; } = null!;
 }
 

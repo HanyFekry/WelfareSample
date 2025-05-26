@@ -1,12 +1,7 @@
-﻿using WelfareDataAccess.Interfaces;
-
-namespace WelfareDataAccess.Entities;
-public class Request : ITrackCreatedEntityEx, ITrackUpdatedEntityEx
+﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
+public class WelfareRequest : ITrackCreatedEntityEx, ITrackUpdatedEntityEx
 {
-    /// <summary>
-    /// Unique identifier for each request
-    /// </summary>
-    public long RequestId { get; set; }
+    public long WelfareRequestId { get; set; }
 
     public string RequestNo { get; set; } = null!;
 
@@ -25,7 +20,7 @@ public class Request : ITrackCreatedEntityEx, ITrackUpdatedEntityEx
     /// <summary>
     /// Identifier for the current status of a current workflow
     /// </summary>
-    public int StatusId { get; set; }
+    public int RequestStatusId { get; set; }
 
     /// <summary>
     /// Date and time when the request was created
@@ -66,20 +61,24 @@ public class Request : ITrackCreatedEntityEx, ITrackUpdatedEntityEx
 
     public string? LaborMobileNo { get; set; }
 
+    public int? MemorandumId { get; set; }
+
+    public int? BatchId { get; set; }
+
     public string? Notes { get; set; }
 
-    //public DisabilityWelfareRequest? DisabilityRequest { get; set; }
+    public BatchRequest? Batch { get; set; }
 
     public Directorate Directorate { get; set; } = null!;
 
-    public RequestStatus Status { get; set; } = null!;
+    public Memorandum? Memorandum { get; set; }
+
+    public RequestStatus RequestStatus { get; set; } = null!;
 
     public WelfareType WelfareType { get; set; } = null!;
 
-    //public MedicalWelfareRequest? MedicalWelfareRequest { get; set; }
+    public ICollection<WelfareRequestAction> WelfareRequestActions { get; set; } = new List<WelfareRequestAction>();
 
-    public ICollection<RequestAttachment> RequestAttachments { get; set; } = new List<RequestAttachment>();
-
-    //public SocialWelfareRequest? SocialWelfareRequest { get; set; }
+    public ICollection<WelfareRequestAttachment> WelfareRequestAttachments { get; set; } = new List<WelfareRequestAttachment>();
 }
 

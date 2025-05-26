@@ -3,36 +3,35 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class PartyConfiguration : IEntityTypeConfiguration<Party>
 {
-    public partial class PartyConfiguration : IEntityTypeConfiguration<Party>
+    public void Configure(EntityTypeBuilder<Party> entity)
     {
-        public void Configure(EntityTypeBuilder<Party> entity)
-        {
-            entity.ToTable("Party");
+        entity.ToTable("Party");
 
-            entity.Property(e => e.PartyId)
-                .ValueGeneratedNever()
-                .HasColumnName("PartyID");
-            entity.Property(e => e.PartyTypeId).HasColumnName("FK_PartyTypeID");
-            entity.Property(e => e.Name).HasMaxLength(200);
+        entity.HasIndex(e => e.PartyTypeId, "IX_Party_FK_PartyTypeID");
 
-            entity.HasOne(d => d.PartyType)
-                .WithMany(
-                    p => p.Parties
-                )
-                .HasForeignKey(d => d.PartyTypeId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_Party_PartyType");
+        entity.Property(e => e.PartyId)
+            .ValueGeneratedNever()
+            .HasColumnName("PartyID");
+        entity.Property(e => e.PartyTypeId).HasColumnName("FK_PartyTypeID");
+        entity.Property(e => e.Name).HasMaxLength(200);
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<Party> entity);
+        entity.HasOne(d => d.PartyType)
+            .WithMany(
+                p => p.Parties
+            )
+            .HasForeignKey(d => d.PartyTypeId)
+            ;
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<Party> entity);
 }

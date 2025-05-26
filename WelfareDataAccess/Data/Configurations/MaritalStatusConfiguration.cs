@@ -3,37 +3,36 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class MaritalStatusConfiguration : IEntityTypeConfiguration<MaritalStatus>
 {
-    public partial class MaritalStatusConfiguration : IEntityTypeConfiguration<MaritalStatus>
+    public void Configure(EntityTypeBuilder<MaritalStatus> entity)
     {
-        public void Configure(EntityTypeBuilder<MaritalStatus> entity)
-        {
-            entity.ToTable("MaritalStatus");
+        entity.ToTable("MaritalStatus");
 
-            entity.Property(e => e.MaritalStatusId)
-                .ValueGeneratedNever()
-                .HasComment("Unique identifier for each marital status record")
-                .HasColumnName("MaritalStatusID");
-            entity.Property(e => e.Code)
-                .HasMaxLength(30)
-                .HasComment("Code representing the marital status");
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.Text)
-                .HasMaxLength(50)
-                .HasComment("English text description of the marital status");
-            entity.Property(e => e.Text2)
-                .HasMaxLength(50)
-                .HasComment("Arabic text description of the marital status");
+        entity.Property(e => e.MaritalStatusId)
+            .ValueGeneratedNever()
+            .HasComment("Unique identifier for each marital status record")
+            .HasColumnName("MaritalStatusID");
+        entity.Property(e => e.Code)
+            .HasMaxLength(30)
+            .HasComment("Code representing the marital status");
+        entity.Property(e => e.IsActive).HasDefaultValue(true);
+        entity.Property(e => e.Text)
+            .HasMaxLength(50)
+            .HasComment("English text description of the marital status");
+        entity.Property(e => e.Text2)
+            .HasMaxLength(50)
+            .HasComment("Arabic text description of the marital status");
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<MaritalStatus> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<MaritalStatus> entity);
 }

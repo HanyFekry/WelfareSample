@@ -15,15 +15,31 @@
    "T4TemplatePath": "",
    "Tables": [
       {
+         "Name": "[dbo].[ActionType]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[AttachmentType]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Beneficiary]",
+         "Name": "[dbo].[BatchRequest]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[BeneficiaryType]",
+         "Name": "[dbo].[BatchRequestAction]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BatchRequestAttachment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[BatchRequestStep]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Beneficiary]",
          "ObjectType": 0
       },
       {
@@ -35,7 +51,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[DisabilityRequest]",
+         "Name": "[dbo].[DisabilityWelfareRequest]",
          "ObjectType": 0
       },
       {
@@ -51,11 +67,11 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[MedicalServiceProvider]",
+         "Name": "[dbo].[Memorandum]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[MedicalWelfareRequest]",
+         "Name": "[dbo].[MemorandumAttachments]",
          "ObjectType": 0
       },
       {
@@ -83,14 +99,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Request]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[RequestAttachments]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[RequesterRelevance]",
          "ObjectType": 0
       },
@@ -103,10 +111,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[SocialCareRequest]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[SocialWelfareRequest]",
          "ObjectType": 0
       },
@@ -115,7 +119,31 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[WelfareRequest]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[WelfareRequestAction]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[WelfareRequestAttachment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[WelfareRequestStep]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[WelfareType]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[WelfareTypesAttachmentTypes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[WorkflowReason]",
          "ObjectType": 0
       }
    ],

@@ -3,33 +3,32 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class PartyTypeConfiguration : IEntityTypeConfiguration<PartyType>
 {
-    public partial class PartyTypeConfiguration : IEntityTypeConfiguration<PartyType>
+    public void Configure(EntityTypeBuilder<PartyType> entity)
     {
-        public void Configure(EntityTypeBuilder<PartyType> entity)
-        {
-            entity.ToTable("PartyType");
+        entity.ToTable("PartyType");
 
-            entity.Property(e => e.PartyTypeId)
-                .ValueGeneratedNever()
-                .HasColumnName("PartyTypeID");
-            entity.Property(e => e.Code).HasMaxLength(30);
-            entity.Property(e => e.IsActive)
-                .HasDefaultValue(true)
-                .HasComment("Indicates if the business nature is active");
-            entity.Property(e => e.IsDeleted).HasComment("Indicates if the business nature is deleted");
-            entity.Property(e => e.Text).HasMaxLength(50);
-            entity.Property(e => e.Text2).HasMaxLength(50);
+        entity.Property(e => e.PartyTypeId)
+            .ValueGeneratedNever()
+            .HasColumnName("PartyTypeID");
+        entity.Property(e => e.Code).HasMaxLength(30);
+        entity.Property(e => e.IsActive)
+            .HasDefaultValue(true)
+            .HasComment("Indicates if the business nature is active");
+        entity.Property(e => e.IsDeleted).HasComment("Indicates if the business nature is deleted");
+        entity.Property(e => e.Text).HasMaxLength(50);
+        entity.Property(e => e.Text2).HasMaxLength(50);
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<PartyType> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<PartyType> entity);
 }

@@ -3,37 +3,36 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class GenderConfiguration : IEntityTypeConfiguration<Gender>
 {
-    public partial class GenderConfiguration : IEntityTypeConfiguration<Gender>
+    public void Configure(EntityTypeBuilder<Gender> entity)
     {
-        public void Configure(EntityTypeBuilder<Gender> entity)
-        {
-            entity.ToTable("Gender", tb => tb.HasComment("Table storing gender information"));
+        entity.ToTable("Gender", tb => tb.HasComment("Table storing gender information"));
 
-            entity.Property(e => e.GenderId)
-                .ValueGeneratedNever()
-                .HasComment("Unique identifier for the gender")
-                .HasColumnName("GenderID");
-            entity.Property(e => e.Code)
-                .HasMaxLength(30)
-                .HasComment("Code representing the gender");
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.Text)
-                .HasMaxLength(50)
-                .HasComment("English text description of the gender");
-            entity.Property(e => e.Text2)
-                .HasMaxLength(50)
-                .HasComment("Arabic text description of the gender");
+        entity.Property(e => e.GenderId)
+            .ValueGeneratedNever()
+            .HasComment("Unique identifier for the gender")
+            .HasColumnName("GenderID");
+        entity.Property(e => e.Code)
+            .HasMaxLength(30)
+            .HasComment("Code representing the gender");
+        entity.Property(e => e.IsActive).HasDefaultValue(true);
+        entity.Property(e => e.Text)
+            .HasMaxLength(50)
+            .HasComment("English text description of the gender");
+        entity.Property(e => e.Text2)
+            .HasMaxLength(50)
+            .HasComment("Arabic text description of the gender");
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<Gender> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<Gender> entity);
 }

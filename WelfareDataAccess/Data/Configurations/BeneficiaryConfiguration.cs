@@ -3,65 +3,64 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class BeneficiaryConfiguration : IEntityTypeConfiguration<Beneficiary>
 {
-    public partial class BeneficiaryConfiguration : IEntityTypeConfiguration<Beneficiary>
+    public void Configure(EntityTypeBuilder<Beneficiary> entity)
     {
-        public void Configure(EntityTypeBuilder<Beneficiary> entity)
-        {
-            entity.ToTable("Beneficiary");
+        entity.ToTable("Beneficiary");
 
-            entity.Property(e => e.BeneficiaryId)
-                .HasComment("Unique identifier for Beneficiary")
-                .HasColumnName("BeneficiaryID");
-            entity.Property(e => e.Amount)
-                .HasComment("Amount to be disbursed for beneficiary")
-                .HasColumnType("decimal(8, 2)");
-            entity.Property(e => e.BeneficiaryName)
-                .HasMaxLength(10)
-                .IsFixedLength()
-                .HasComment("Beneficiary name");
-            entity.Property(e => e.LaborId)
-                .HasComment("Unique identifier for labor associated with request")
-                .HasColumnName("FK_LaborID");
-            entity.Property(e => e.RelativeRelationTypeId)
-                .HasComment("Relationship to dead employee")
-                .HasColumnName("FK_RelativeRelationTypeID");
-            entity.Property(e => e.SocialWelfareRequestId)
-                .HasComment("Identifier of social request if applicable")
-                .HasColumnName("FK_SocialWelfareRequestId");
-            entity.Property(e => e.Iban)
-                .HasMaxLength(120)
-                .HasColumnName("IBAN");
-            entity.Property(e => e.NationalId)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasComment("National identification number of the labor")
-                .HasColumnName("NationalID");
+        entity.HasIndex(e => e.RelativeRelationTypeId, "IX_Beneficiary_FK_RelativeRelationTypeID");
 
-            entity.HasOne(d => d.RelativeRelationType)
-                .WithMany(
-                    p => p.Beneficiaries
-                )
-                .HasForeignKey(d => d.RelativeRelationTypeId)
-                .OnDelete(DeleteBehavior.Cascade);
+        entity.HasIndex(e => e.SocialWelfareRequestId, "IX_Beneficiary_FK_SocialWelfareRequestId");
 
-            entity.HasOne(d => d.SocialWelfareRequest)
-                .WithMany(
-                    p => p.Beneficiaries
-                )
-                .HasForeignKey(d => d.SocialWelfareRequestId)
-                .OnDelete(DeleteBehavior.Cascade);
+        entity.Property(e => e.BeneficiaryId)
+            .HasComment("Unique identifier for Beneficiary")
+            .HasColumnName("BeneficiaryID");
+        entity.Property(e => e.Amount)
+            .HasComment("Amount to be disbursed for beneficiary")
+            .HasColumnType("decimal(8, 2)");
+        entity.Property(e => e.BeneficiaryName)
+            .HasMaxLength(10)
+            .IsFixedLength()
+            .HasComment("Beneficiary name");
+        entity.Property(e => e.LaborId)
+            .HasComment("Unique identifier for labor associated with request")
+            .HasColumnName("FK_LaborID");
+        entity.Property(e => e.RelativeRelationTypeId)
+            .HasComment("Relationship to dead employee")
+            .HasColumnName("FK_RelativeRelationTypeID");
+        entity.Property(e => e.SocialWelfareRequestId)
+            .HasComment("Identifier of social request if applicable")
+            .HasColumnName("FK_SocialWelfareRequestId");
+        entity.Property(e => e.Iban)
+            .HasMaxLength(120)
+            .HasColumnName("IBAN");
+        entity.Property(e => e.NationalId)
+            .HasMaxLength(14)
+            .IsUnicode(false)
+            .IsFixedLength()
+            .HasComment("National identification number of the labor")
+            .HasColumnName("NationalID");
 
-            OnConfigurePartial(entity);
-        }
+        entity.HasOne(d => d.RelativeRelationType)
+            .WithMany(
+                p => p.Beneficiaries
+            ).HasForeignKey(d => d.RelativeRelationTypeId);
 
-        partial void OnConfigurePartial(EntityTypeBuilder<Beneficiary> entity);
+        entity.HasOne(d => d.SocialWelfareRequest)
+            .WithMany(
+                p => p.Beneficiaries
+            ).HasForeignKey(d => d.SocialWelfareRequestId);
+
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<Beneficiary> entity);
 }

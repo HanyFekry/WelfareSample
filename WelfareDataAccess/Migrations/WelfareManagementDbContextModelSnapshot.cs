@@ -22,12 +22,71 @@ namespace WelfareDataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.AttachmentType", b =>
+            modelBuilder.Entity("ActionTypeBatchRequestStep", b =>
+                {
+                    b.Property<int>("ActionTypesActionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BatchRequestStepsBatchRequestStepId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ActionTypesActionTypeId", "BatchRequestStepsBatchRequestStepId");
+
+                    b.HasIndex("BatchRequestStepsBatchRequestStepId");
+
+                    b.ToTable("ActionTypeBatchRequestStep");
+                });
+
+            modelBuilder.Entity("ActionTypeWelfareRequestStep", b =>
+                {
+                    b.Property<int>("ActionTypesActionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WelfareRequestStepsWelfareRequestStepId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ActionTypesActionTypeId", "WelfareRequestStepsWelfareRequestStepId");
+
+                    b.HasIndex("WelfareRequestStepsWelfareRequestStepId");
+
+                    b.ToTable("ActionTypeWelfareRequestStep");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.ActionType", b =>
+                {
+                    b.Property<int>("ActionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ActionTypeId")
+                        .HasName("PK_AcctionType");
+
+                    b.ToTable("ActionType", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.AttachmentType", b =>
                 {
                     b.Property<int>("AttachmentTypeId")
                         .HasColumnType("int")
                         .HasColumnName("AttachmentTypeID")
                         .HasComment("Unique identifier for the attachment type");
+
+                    b.Property<int>("AttachmentEntityType")
+                        .HasColumnType("int")
+                        .HasComment("Enum value(WelfareRequest,Memorandum,Batch)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -65,14 +124,9 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasComment("Arabic text description of the attachment type");
 
-                    b.Property<int>("WelfareTypeId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_WelfareTypeID")
-                        .HasComment("Foreign key to the LaborCareType table");
-
                     b.HasKey("AttachmentTypeId");
 
-                    b.HasIndex("WelfareTypeId");
+                    b.HasIndex(new[] { "AttachmentEntityType" }, "IX_AttachmentType_FK_WelfareTypeID");
 
                     b.ToTable("AttachmentType", null, t =>
                         {
@@ -80,7 +134,181 @@ namespace WelfareDataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Beneficiary", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequest", b =>
+                {
+                    b.Property<int>("BatchRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("BatchNo")
+                        .IsRequired()
+                        .HasMaxLength(18)
+                        .HasColumnType("nvarchar(18)");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("decimal(12, 2)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request record was last updated");
+
+                    b.Property<string>("UpdatedUserId")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who last updated the request record");
+
+                    b.Property<string>("UpdatedUserName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who last updated the request record");
+
+                    b.HasKey("BatchRequestId");
+
+                    b.ToTable("BatchRequest", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestAction", b =>
+                {
+                    b.Property<long>("BatchRequestActionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BatchRequestActionId"));
+
+                    b.Property<int>("ActionTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_ActionTypeID")
+                        .HasComment("Type of action performed");
+
+                    b.Property<int>("BatchRequestId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_BatchRequestID")
+                        .HasComment("Parent request identifier");
+
+                    b.Property<int>("BatchRequestStepId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_BatchRequestStepId")
+                        .HasComment("Current step in workflow for the action");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<int?>("WorkflowReasonId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_WorkflowReasonID")
+                        .HasComment("Reason for workflow action, if applicable");
+
+                    b.HasKey("BatchRequestActionId");
+
+                    b.HasIndex("ActionTypeId");
+
+                    b.HasIndex("BatchRequestId");
+
+                    b.HasIndex("BatchRequestStepId");
+
+                    b.HasIndex("WorkflowReasonId");
+
+                    b.ToTable("BatchRequestAction", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestAttachment", b =>
+                {
+                    b.Property<int>("BatchAttachmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BatchAttachmentId"));
+
+                    b.Property<string>("AttachmentPath")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("AttachmentTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_AttachmentTypeId");
+
+                    b.Property<int>("BatchId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_BatchId");
+
+                    b.HasKey("BatchAttachmentId");
+
+                    b.HasIndex("AttachmentTypeId");
+
+                    b.HasIndex("BatchId");
+
+                    b.ToTable("BatchRequestAttachment", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestStep", b =>
+                {
+                    b.Property<int>("BatchRequestStepId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Code representing the request step");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("English text description of the request step");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Arabic text description of the request step");
+
+                    b.HasKey("BatchRequestStepId");
+
+                    b.ToTable("BatchRequestStep", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Beneficiary", b =>
                 {
                     b.Property<long>("BeneficiaryId")
                         .ValueGeneratedOnAdd()
@@ -132,14 +360,14 @@ namespace WelfareDataAccess.Migrations
 
                     b.HasKey("BeneficiaryId");
 
-                    b.HasIndex("RelativeRelationTypeId");
+                    b.HasIndex(new[] { "RelativeRelationTypeId" }, "IX_Beneficiary_FK_RelativeRelationTypeID");
 
-                    b.HasIndex("SocialWelfareRequestId");
+                    b.HasIndex(new[] { "SocialWelfareRequestId" }, "IX_Beneficiary_FK_SocialWelfareRequestId");
 
                     b.ToTable("Beneficiary", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.BeneficiaryType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BeneficiaryType", b =>
                 {
                     b.Property<int>("BeneficiaryTypeId")
                         .HasColumnType("int");
@@ -163,7 +391,7 @@ namespace WelfareDataAccess.Migrations
                     b.ToTable("BeneficiaryType", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.BusinessNature", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BusinessNature", b =>
                 {
                     b.Property<int>("BusinessNatureId")
                         .HasColumnType("int")
@@ -206,7 +434,7 @@ namespace WelfareDataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Directorate", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Directorate", b =>
                 {
                     b.Property<int>("DirectorateId")
                         .HasColumnType("int")
@@ -253,7 +481,7 @@ namespace WelfareDataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Gender", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Gender", b =>
                 {
                     b.Property<int>("GenderId")
                         .HasColumnType("int")
@@ -293,7 +521,7 @@ namespace WelfareDataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Labor", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Labor", b =>
                 {
                     b.Property<long>("LaborId")
                         .HasColumnType("bigint")
@@ -382,22 +610,22 @@ namespace WelfareDataAccess.Migrations
 
                     b.HasKey("LaborId");
 
-                    b.HasIndex("GenderId");
+                    b.HasIndex(new[] { "GenderId" }, "IX_Labor_FK_GenderID");
 
-                    b.HasIndex("LastBusinessNatureId");
+                    b.HasIndex(new[] { "LastBusinessNatureId" }, "IX_Labor_FK_LastBusinessNatureID");
 
-                    b.HasIndex("LastDirectorateId");
+                    b.HasIndex(new[] { "LastDirectorateId" }, "IX_Labor_FK_LastDirectorateID");
 
-                    b.HasIndex("LastExecutionPartyId");
+                    b.HasIndex(new[] { "LastExecutionPartyId" }, "IX_Labor_FK_LastExecutionPartyID");
 
-                    b.HasIndex("MaritalStatusId");
+                    b.HasIndex(new[] { "MaritalStatusId" }, "IX_Labor_FK_MaritalStatusID");
 
-                    b.HasIndex("OccupationId");
+                    b.HasIndex(new[] { "OccupationId" }, "IX_Labor_FK_OccupationID");
 
                     b.ToTable("Labor", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.MaritalStatus", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MaritalStatus", b =>
                 {
                     b.Property<int>("MaritalStatusId")
                         .HasColumnType("int")
@@ -434,7 +662,7 @@ namespace WelfareDataAccess.Migrations
                     b.ToTable("MaritalStatus", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.MedicalServiceProvider", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MedicalServiceProvider", b =>
                 {
                     b.Property<int>("MedicalServiceProviderId")
                         .HasColumnType("int");
@@ -463,7 +691,140 @@ namespace WelfareDataAccess.Migrations
                     b.ToTable("MedicalServiceProvider", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.NotificationReceiverType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MedicalWelfareRequest", b =>
+                {
+                    b.Property<long>("RequestId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("BeneficiaryIban")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)")
+                        .HasColumnName("BeneficiaryIBAN");
+
+                    b.Property<string>("BeneficiaryName")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<int?>("BeneficiaryNid")
+                        .HasColumnType("int")
+                        .HasColumnName("BeneficiaryNId");
+
+                    b.Property<int?>("BeneficiaryTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_BeneficiaryTypeId");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int?>("MedicalServiceProviderId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_MedicalServiceProviderId");
+
+                    b.Property<byte?>("NoOfPrescriptions")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("RequestId");
+
+                    b.HasIndex(new[] { "BeneficiaryTypeId" }, "IX_MedicalWelfareRequest_FK_BeneficiaryTypeId");
+
+                    b.HasIndex(new[] { "MedicalServiceProviderId" }, "IX_MedicalWelfareRequest_FK_MedicalServiceProviderId");
+
+                    b.ToTable("MedicalWelfareRequest", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Memorandum", b =>
+                {
+                    b.Property<int>("MemorandumId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MemorandumId"));
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<int>("RequestType")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_RequestType");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request record was last updated");
+
+                    b.Property<string>("UpdatedUserId")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who last updated the request record");
+
+                    b.Property<string>("UpdatedUserName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who last updated the request record");
+
+                    b.HasKey("MemorandumId");
+
+                    b.HasIndex("RequestType");
+
+                    b.ToTable("Memorandum", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MemorandumAttachment", b =>
+                {
+                    b.Property<int>("MemorandumAttachmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MemorandumAttachmentId"));
+
+                    b.Property<string>("AttachmentPath")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("AttachmentTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_AttachmentTypeId");
+
+                    b.Property<int>("MemorandumId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_MemorandumId");
+
+                    b.HasKey("MemorandumAttachmentId");
+
+                    b.HasIndex("AttachmentTypeId");
+
+                    b.HasIndex("MemorandumId");
+
+                    b.ToTable("MemorandumAttachments");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.NotificationReceiverType", b =>
                 {
                     b.Property<int>("NotificationReceiverTypeId")
                         .HasColumnType("int")
@@ -492,7 +853,7 @@ namespace WelfareDataAccess.Migrations
                     b.ToTable("NotificationReceiverType", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Occupation", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Occupation", b =>
                 {
                     b.Property<int>("OccupationId")
                         .HasColumnType("int")
@@ -529,7 +890,7 @@ namespace WelfareDataAccess.Migrations
                     b.ToTable("Occupation", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Party", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Party", b =>
                 {
                     b.Property<long>("PartyId")
                         .HasColumnType("bigint")
@@ -546,12 +907,12 @@ namespace WelfareDataAccess.Migrations
 
                     b.HasKey("PartyId");
 
-                    b.HasIndex("PartyTypeId");
+                    b.HasIndex(new[] { "PartyTypeId" }, "IX_Party_FK_PartyTypeID");
 
                     b.ToTable("Party", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.PartyType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.PartyType", b =>
                 {
                     b.Property<int>("PartyTypeId")
                         .HasColumnType("int")
@@ -586,7 +947,7 @@ namespace WelfareDataAccess.Migrations
                     b.ToTable("PartyType", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.RelativeRelationType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RelativeRelationType", b =>
                 {
                     b.Property<int>("RelativeRelationTypeId")
                         .HasColumnType("int")
@@ -611,7 +972,7 @@ namespace WelfareDataAccess.Migrations
                     b.ToTable("RelativeRelationType", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.RelativeRelationship", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RelativeRelationship", b =>
                 {
                     b.Property<int>("RelativeRelationshipId")
                         .HasColumnType("int")
@@ -636,13 +997,134 @@ namespace WelfareDataAccess.Migrations
                     b.ToTable("RelativeRelationship", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Request", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RequestStatus", b =>
                 {
-                    b.Property<long>("RequestId")
+                    b.Property<int>("RequestStatusId")
+                        .HasColumnType("int")
+                        .HasColumnName("RequestStatusID")
+                        .HasComment("Unique identifier for each request status record");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasComment("Code representing the request status");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("English text description of the request status");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Arabic text description of the request status");
+
+                    b.HasKey("RequestStatusId");
+
+                    b.ToTable("RequestStatus", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RequestType", b =>
+                {
+                    b.Property<int>("RequestTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("RequestTypeID")
+                        .HasComment("Unique identifier for each request type");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasComment("Code representing the request type");
+
+                    b.Property<bool>("IsMemorandum")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("English text description of the request type");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Arabic text description of the request type");
+
+                    b.HasKey("RequestTypeId");
+
+                    b.ToTable("RequestType", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RequesterRelevance", b =>
+                {
+                    b.Property<int>("RequesterRelevantId")
+                        .HasColumnType("int")
+                        .HasColumnName("RequesterRelevantID");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("RequesterRelevantId")
+                        .HasName("PK_RequesterRelevant");
+
+                    b.ToTable("RequesterRelevance", null, t =>
+                        {
+                            t.HasComment("Labor or Medical provider or Other");
+                        });
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareCategory", b =>
+                {
+                    b.Property<byte>("WelfareCategoryId")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("WelfareCategoryId");
+
+                    b.ToTable("WelfareCategory", null, t =>
+                        {
+                            t.HasComment("Monetary or ");
+                        });
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", b =>
+                {
+                    b.Property<long>("WelfareRequestId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RequestId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("WelfareRequestId"));
+
+                    b.Property<int?>("BatchId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_BatchId");
 
                     b.Property<string>("CreatedByUserId")
                         .IsRequired()
@@ -677,6 +1159,10 @@ namespace WelfareDataAccess.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("nvarchar(12)");
 
+                    b.Property<int?>("MemorandumId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_MemorandumId");
+
                     b.Property<string>("Notes")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -686,9 +1172,9 @@ namespace WelfareDataAccess.Migrations
                         .HasMaxLength(14)
                         .HasColumnType("nvarchar(14)");
 
-                    b.Property<int>("StatusId")
+                    b.Property<int>("RequestStatusId")
                         .HasColumnType("int")
-                        .HasColumnName("FK_StatusID")
+                        .HasColumnName("FK_RequestStatusID")
                         .HasComment("Identifier for the current status of a current workflow");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -718,26 +1204,88 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnName("FK_WelfareTypeID")
                         .HasComment("Identifier for the type of request");
 
-                    b.HasKey("RequestId");
+                    b.HasKey("WelfareRequestId");
 
-                    b.HasIndex("DirectorateId");
+                    b.HasIndex("BatchId");
 
-                    b.HasIndex("StatusId");
+                    b.HasIndex("MemorandumId");
 
-                    b.HasIndex("WelfareTypeId");
+                    b.HasIndex(new[] { "DirectorateId" }, "IX_Request_FK_DirectorateID");
 
-                    b.ToTable("Request", (string)null);
+                    b.HasIndex(new[] { "RequestStatusId" }, "IX_Request_FK_StatusID");
+
+                    b.HasIndex(new[] { "WelfareTypeId" }, "IX_Request_FK_WelfareTypeID");
+
+                    b.ToTable("WelfareRequest", (string)null);
 
                     b.UseTptMappingStrategy();
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.RequestAttachment", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequestAction", b =>
                 {
-                    b.Property<long>("RequestAttachmentId")
+                    b.Property<long>("WelfareRequestActionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RequestAttachmentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("WelfareRequestActionId"));
+
+                    b.Property<int>("ActionTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_ActionTypeID")
+                        .HasComment("Type of action performed");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<long>("WelfareRequestId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("FK_WelfareRequestID")
+                        .HasComment("Parent request identifier");
+
+                    b.Property<int>("WelfareRequestStepId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_WelfareRequestStepId")
+                        .HasComment("Current step in workflow for the action");
+
+                    b.Property<int?>("WorkflowReasonId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_WorkflowReasonID")
+                        .HasComment("Reason for workflow action, if applicable");
+
+                    b.HasKey("WelfareRequestActionId");
+
+                    b.HasIndex("ActionTypeId");
+
+                    b.HasIndex("WelfareRequestId");
+
+                    b.HasIndex("WelfareRequestStepId");
+
+                    b.HasIndex("WorkflowReasonId");
+
+                    b.ToTable("WelfareRequestAction", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequestAttachment", b =>
+                {
+                    b.Property<long>("WelfareRequestAttachmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("WelfareRequestAttachmentId"));
 
                     b.Property<string>("AttachmentPath")
                         .IsRequired()
@@ -752,84 +1300,25 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("FK_RequestId");
 
-                    b.HasKey("RequestAttachmentId")
+                    b.HasKey("WelfareRequestAttachmentId")
                         .HasName("PK_RequestAttachments_1");
 
-                    b.HasIndex("AttachmentTypeId");
+                    b.HasIndex(new[] { "AttachmentTypeId" }, "IX_RequestAttachments_FK_AttachmentTypeId");
 
-                    b.HasIndex("RequestId");
+                    b.HasIndex(new[] { "RequestId" }, "IX_RequestAttachments_FK_RequestId");
 
-                    b.ToTable("RequestAttachments");
+                    b.ToTable("WelfareRequestAttachment", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.RequestStatus", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequestStep", b =>
                 {
-                    b.Property<int>("RequestStatusId")
-                        .HasColumnType("int")
-                        .HasColumnName("RequestStatusID")
-                        .HasComment("Unique identifier for each request status record");
+                    b.Property<int>("WelfareRequestStepId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasComment("Code representing the request status");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("English text description of the request status");
-
-                    b.Property<string>("Text2")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("Arabic text description of the request status");
-
-                    b.HasKey("RequestStatusId");
-
-                    b.ToTable("RequestStatus", (string)null);
-                });
-
-            modelBuilder.Entity("WelfareDataAccess.Entities.RequestType", b =>
-                {
-                    b.Property<int>("RequestTypeId")
-                        .HasColumnType("int")
-                        .HasColumnName("RequestTypeID")
-                        .HasComment("Unique identifier for each request type");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasComment("Code representing the request type");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("English text description of the request type");
-
-                    b.Property<string>("Text2")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("Arabic text description of the request type");
-
-                    b.HasKey("RequestTypeId");
-
-                    b.ToTable("RequestType", (string)null);
-                });
-
-            modelBuilder.Entity("WelfareDataAccess.Entities.RequesterRelevance", b =>
-                {
-                    b.Property<int>("RequesterRelevantId")
-                        .HasColumnType("int")
-                        .HasColumnName("RequesterRelevantID");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -840,43 +1329,12 @@ namespace WelfareDataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("RequesterRelevantId")
-                        .HasName("PK_RequesterRelevant");
+                    b.HasKey("WelfareRequestStepId");
 
-                    b.ToTable("RequesterRelevance", null, t =>
-                        {
-                            t.HasComment("Labor or Medical provider or Other");
-                        });
+                    b.ToTable("WelfareRequestStep", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.WelfareCategory", b =>
-                {
-                    b.Property<byte>("WelfareCategoryId")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Text2")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("WelfareCategoryId");
-
-                    b.ToTable("WelfareCategory", null, t =>
-                        {
-                            t.HasComment("Monetary or ");
-                        });
-                });
-
-            modelBuilder.Entity("WelfareDataAccess.Entities.WelfareType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareType", b =>
                 {
                     b.Property<int>("WelfareTypeId")
                         .HasColumnType("int")
@@ -912,14 +1370,65 @@ namespace WelfareDataAccess.Migrations
 
                     b.HasKey("WelfareTypeId");
 
-                    b.HasIndex("WelfareCategoryId");
+                    b.HasIndex(new[] { "WelfareCategoryId" }, "IX_WelfareType_FK_WelfareCategoryId");
 
                     b.ToTable("WelfareType", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.DisabilityWelfareRequest", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WorkflowReason", b =>
                 {
-                    b.HasBaseType("WelfareDataAccess.Entities.Request");
+                    b.Property<int>("WorkflowReasonId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("WorkflowType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("WorkflowReasonId");
+
+                    b.ToTable("WorkflowReason", (string)null);
+                });
+
+            modelBuilder.Entity("WelfareTypesAttachmentTypes", b =>
+                {
+                    b.Property<int>("WelfareTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("WelfareTypeID");
+
+                    b.Property<int>("AttachmentTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("AttachmentTypeID");
+
+                    b.HasKey("WelfareTypeId", "AttachmentTypeId");
+
+                    b.HasIndex("AttachmentTypeId");
+
+                    b.ToTable("WelfareTypesAttachmentTypes", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.DisabilityWelfareRequest", b =>
+                {
+                    b.HasBaseType("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<decimal?>("DisabilityRatio")
                         .HasColumnType("decimal(2, 0)");
@@ -927,55 +1436,15 @@ namespace WelfareDataAccess.Migrations
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<long>("RequestId")
+                        .HasColumnType("bigint");
+
                     b.ToTable("DisabilityWelfareRequest", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.MedicalWelfareRequest", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.SocialWelfareRequest", b =>
                 {
-                    b.HasBaseType("WelfareDataAccess.Entities.Request");
-
-                    b.Property<string>("BeneficiaryIban")
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)")
-                        .HasColumnName("BeneficiaryIBAN");
-
-                    b.Property<string>("BeneficiaryName")
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
-
-                    b.Property<int?>("BeneficiaryNid")
-                        .HasMaxLength(14)
-                        .IsUnicode(false)
-                        .HasColumnType("int")
-                        .HasColumnName("BeneficiaryNId")
-                        .IsFixedLength();
-
-                    b.Property<int?>("BeneficiaryTypeId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_BeneficiaryTypeId");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int?>("MedicalServiceProviderId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_MedicalServiceProviderId");
-
-                    b.Property<byte?>("NoOfPrescriptions")
-                        .HasColumnType("tinyint");
-
-                    b.HasIndex("BeneficiaryTypeId");
-
-                    b.HasIndex("MedicalServiceProviderId");
-
-                    b.ToTable("MedicalWelfareRequest", (string)null);
-                });
-
-            modelBuilder.Entity("WelfareDataAccess.Entities.SocialWelfareRequest", b =>
-                {
-                    b.HasBaseType("WelfareDataAccess.Entities.Request");
+                    b.HasBaseType("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest");
 
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
@@ -994,6 +1463,9 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("int")
                         .HasColumnName("FK_RelativeRelationshipId");
 
+                    b.Property<long>("RequestId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("RequesterName")
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
@@ -1002,33 +1474,104 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("int")
                         .HasColumnName("FK_RequesterRelevanceId");
 
-                    b.HasIndex("RelativeRelationshipId");
+                    b.HasIndex(new[] { "RelativeRelationshipId" }, "IX_SocialWelfareRequest_FK_RelativeRelationshipId");
 
-                    b.HasIndex("RequesterRelevanceId");
+                    b.HasIndex(new[] { "RequesterRelevanceId" }, "IX_SocialWelfareRequest_FK_RequesterRelevanceId");
 
                     b.ToTable("SocialWelfareRequest", (string)null);
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.AttachmentType", b =>
+            modelBuilder.Entity("ActionTypeBatchRequestStep", b =>
                 {
-                    b.HasOne("WelfareDataAccess.Entities.WelfareType", "WelfareType")
-                        .WithMany("AttachmentTypes")
-                        .HasForeignKey("WelfareTypeId")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.ActionType", null)
+                        .WithMany()
+                        .HasForeignKey("ActionTypesActionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("WelfareType");
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestStep", null)
+                        .WithMany()
+                        .HasForeignKey("BatchRequestStepsBatchRequestStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Beneficiary", b =>
+            modelBuilder.Entity("ActionTypeWelfareRequestStep", b =>
                 {
-                    b.HasOne("WelfareDataAccess.Entities.RelativeRelationType", "RelativeRelationType")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.ActionType", null)
+                        .WithMany()
+                        .HasForeignKey("ActionTypesActionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequestStep", null)
+                        .WithMany()
+                        .HasForeignKey("WelfareRequestStepsWelfareRequestStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestAction", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.ActionType", "ActionType")
+                        .WithMany("BatchRequestActions")
+                        .HasForeignKey("ActionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BatchRequest", "BatchRequest")
+                        .WithMany("BatchRequestActions")
+                        .HasForeignKey("BatchRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestStep", "BatchRequestStep")
+                        .WithMany("BatchRequestActions")
+                        .HasForeignKey("BatchRequestStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WorkflowReason", "WorkflowReason")
+                        .WithMany("BatchRequestActions")
+                        .HasForeignKey("WorkflowReasonId");
+
+                    b.Navigation("ActionType");
+
+                    b.Navigation("BatchRequest");
+
+                    b.Navigation("BatchRequestStep");
+
+                    b.Navigation("WorkflowReason");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestAttachment", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.AttachmentType", "AttachmentType")
+                        .WithMany("BatchRequestAttachments")
+                        .HasForeignKey("AttachmentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BatchRequest", "Batch")
+                        .WithMany("BatchRequestAttachments")
+                        .HasForeignKey("BatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AttachmentType");
+
+                    b.Navigation("Batch");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Beneficiary", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.RelativeRelationType", "RelativeRelationType")
                         .WithMany("Beneficiaries")
                         .HasForeignKey("RelativeRelationTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WelfareDataAccess.Entities.SocialWelfareRequest", "SocialWelfareRequest")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.SocialWelfareRequest", "SocialWelfareRequest")
                         .WithMany("Beneficiaries")
                         .HasForeignKey("SocialWelfareRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1039,39 +1582,33 @@ namespace WelfareDataAccess.Migrations
                     b.Navigation("SocialWelfareRequest");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Labor", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Labor", b =>
                 {
-                    b.HasOne("WelfareDataAccess.Entities.Gender", "Gender")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Gender", "Gender")
                         .WithMany("Labors")
-                        .HasForeignKey("GenderId")
-                        .HasConstraintName("FK_Labor_Gender");
+                        .HasForeignKey("GenderId");
 
-                    b.HasOne("WelfareDataAccess.Entities.BusinessNature", "LastBusinessNature")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BusinessNature", "LastBusinessNature")
                         .WithMany("Labors")
-                        .HasForeignKey("LastBusinessNatureId")
-                        .HasConstraintName("FK_Labor_BusinessNature");
+                        .HasForeignKey("LastBusinessNatureId");
 
-                    b.HasOne("WelfareDataAccess.Entities.Directorate", "LastDirectorate")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Directorate", "LastDirectorate")
                         .WithMany("Labors")
-                        .HasForeignKey("LastDirectorateId")
-                        .HasConstraintName("FK_Labor_Directorate");
+                        .HasForeignKey("LastDirectorateId");
 
-                    b.HasOne("WelfareDataAccess.Entities.Party", "LastExecutionParty")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Party", "LastExecutionParty")
                         .WithMany("Labors")
-                        .HasForeignKey("LastExecutionPartyId")
-                        .HasConstraintName("FK_Labor_Party");
+                        .HasForeignKey("LastExecutionPartyId");
 
-                    b.HasOne("WelfareDataAccess.Entities.MaritalStatus", "MaritalStatus")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.MaritalStatus", "MaritalStatus")
                         .WithMany("Labors")
-                        .HasForeignKey("MaritalStatusId")
-                        .HasConstraintName("FK_Labor_MaritalStatus");
+                        .HasForeignKey("MaritalStatusId");
 
-                    b.HasOne("WelfareDataAccess.Entities.Occupation", "Occupation")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Occupation", "Occupation")
                         .WithMany("Labors")
                         .HasForeignKey("OccupationId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Labor_Occupation");
+                        .IsRequired();
 
                     b.Navigation("Gender");
 
@@ -1086,55 +1623,146 @@ namespace WelfareDataAccess.Migrations
                     b.Navigation("Occupation");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Party", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MedicalWelfareRequest", b =>
                 {
-                    b.HasOne("WelfareDataAccess.Entities.PartyType", "PartyType")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BeneficiaryType", "BeneficiaryType")
+                        .WithMany("MedicalWelfareRequests")
+                        .HasForeignKey("BeneficiaryTypeId");
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.MedicalServiceProvider", "MedicalServiceProvider")
+                        .WithMany("MedicalWelfareRequests")
+                        .HasForeignKey("MedicalServiceProviderId");
+
+                    b.Navigation("BeneficiaryType");
+
+                    b.Navigation("MedicalServiceProvider");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Memorandum", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.RequestType", "RequestTypeNavigation")
+                        .WithMany("Memoranda")
+                        .HasForeignKey("RequestType")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RequestTypeNavigation");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MemorandumAttachment", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.AttachmentType", "AttachmentType")
+                        .WithMany("MemorandumAttachments")
+                        .HasForeignKey("AttachmentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Memorandum", "Memorandum")
+                        .WithMany("MemorandumAttachments")
+                        .HasForeignKey("MemorandumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AttachmentType");
+
+                    b.Navigation("Memorandum");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Party", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.PartyType", "PartyType")
                         .WithMany("Parties")
                         .HasForeignKey("PartyTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_Party_PartyType");
+                        .IsRequired();
 
                     b.Navigation("PartyType");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Request", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", b =>
                 {
-                    b.HasOne("WelfareDataAccess.Entities.Directorate", "Directorate")
-                        .WithMany("Requests")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BatchRequest", "Batch")
+                        .WithMany("WelfareRequests")
+                        .HasForeignKey("BatchId");
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Directorate", "Directorate")
+                        .WithMany("WelfareRequests")
                         .HasForeignKey("DirectorateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WelfareDataAccess.Entities.RequestStatus", "Status")
-                        .WithMany("Requests")
-                        .HasForeignKey("StatusId")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Memorandum", "Memorandum")
+                        .WithMany("WelfareRequests")
+                        .HasForeignKey("MemorandumId");
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.RequestStatus", "RequestStatus")
+                        .WithMany("WelfareRequests")
+                        .HasForeignKey("RequestStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WelfareDataAccess.Entities.WelfareType", "WelfareType")
-                        .WithMany("Requests")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareType", "WelfareType")
+                        .WithMany("WelfareRequests")
                         .HasForeignKey("WelfareTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Batch");
+
                     b.Navigation("Directorate");
 
-                    b.Navigation("Status");
+                    b.Navigation("Memorandum");
+
+                    b.Navigation("RequestStatus");
 
                     b.Navigation("WelfareType");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.RequestAttachment", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequestAction", b =>
                 {
-                    b.HasOne("WelfareDataAccess.Entities.AttachmentType", "AttachmentType")
-                        .WithMany("RequestAttachments")
-                        .HasForeignKey("AttachmentTypeId")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.ActionType", "ActionType")
+                        .WithMany("WelfareRequestActions")
+                        .HasForeignKey("ActionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WelfareDataAccess.Entities.Request", "Request")
-                        .WithMany("RequestAttachments")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", "WelfareRequest")
+                        .WithMany("WelfareRequestActions")
+                        .HasForeignKey("WelfareRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequestStep", "WelfareRequestStep")
+                        .WithMany("WelfareRequestActions")
+                        .HasForeignKey("WelfareRequestStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WorkflowReason", "WorkflowReason")
+                        .WithMany("WelfareRequestActions")
+                        .HasForeignKey("WorkflowReasonId");
+
+                    b.Navigation("ActionType");
+
+                    b.Navigation("WelfareRequest");
+
+                    b.Navigation("WelfareRequestStep");
+
+                    b.Navigation("WorkflowReason");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequestAttachment", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.AttachmentType", "AttachmentType")
+                        .WithMany("WelfareRequestAttachments")
+                        .HasForeignKey("AttachmentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", "Request")
+                        .WithMany("WelfareRequestAttachments")
                         .HasForeignKey("RequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AttachmentType");
@@ -1142,9 +1770,9 @@ namespace WelfareDataAccess.Migrations
                     b.Navigation("Request");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.WelfareType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareType", b =>
                 {
-                    b.HasOne("WelfareDataAccess.Entities.WelfareCategory", "WelfareCategory")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareCategory", "WelfareCategory")
                         .WithMany("WelfareTypes")
                         .HasForeignKey("WelfareCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1153,147 +1781,190 @@ namespace WelfareDataAccess.Migrations
                     b.Navigation("WelfareCategory");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.DisabilityWelfareRequest", b =>
+            modelBuilder.Entity("WelfareTypesAttachmentTypes", b =>
                 {
-                    b.HasOne("WelfareDataAccess.Entities.Request", null)
-                        .WithOne()
-                        .HasForeignKey("WelfareDataAccess.Entities.DisabilityWelfareRequest", "RequestId")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.AttachmentType", null)
+                        .WithMany()
+                        .HasForeignKey("AttachmentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareType", null)
+                        .WithMany()
+                        .HasForeignKey("WelfareTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.MedicalWelfareRequest", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.DisabilityWelfareRequest", b =>
                 {
-                    b.HasOne("WelfareDataAccess.Entities.BeneficiaryType", "BeneficiaryType")
-                        .WithMany("MedicalWelfareRequests")
-                        .HasForeignKey("BeneficiaryTypeId");
-
-                    b.HasOne("WelfareDataAccess.Entities.MedicalServiceProvider", "MedicalServiceProvider")
-                        .WithMany("MedicalWelfareRequests")
-                        .HasForeignKey("MedicalServiceProviderId");
-
-                    b.HasOne("WelfareDataAccess.Entities.Request", null)
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", null)
                         .WithOne()
-                        .HasForeignKey("WelfareDataAccess.Entities.MedicalWelfareRequest", "RequestId")
+                        .HasForeignKey("S3.MoL.WelfareManagement.Domain.Entities.DisabilityWelfareRequest", "WelfareRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("BeneficiaryType");
-
-                    b.Navigation("MedicalServiceProvider");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.SocialWelfareRequest", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.SocialWelfareRequest", b =>
                 {
-                    b.HasOne("WelfareDataAccess.Entities.RelativeRelationship", "RelativeRelationship")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.RelativeRelationship", "RelativeRelationship")
                         .WithMany("SocialWelfareRequests")
                         .HasForeignKey("RelativeRelationshipId");
 
-                    b.HasOne("WelfareDataAccess.Entities.Request", null)
-                        .WithOne()
-                        .HasForeignKey("WelfareDataAccess.Entities.SocialWelfareRequest", "RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WelfareDataAccess.Entities.RequesterRelevance", "RequesterRelevance")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.RequesterRelevance", "RequesterRelevance")
                         .WithMany("SocialWelfareRequests")
                         .HasForeignKey("RequesterRelevanceId");
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", null)
+                        .WithOne()
+                        .HasForeignKey("S3.MoL.WelfareManagement.Domain.Entities.SocialWelfareRequest", "WelfareRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("RelativeRelationship");
 
                     b.Navigation("RequesterRelevance");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.AttachmentType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.ActionType", b =>
                 {
-                    b.Navigation("RequestAttachments");
+                    b.Navigation("BatchRequestActions");
+
+                    b.Navigation("WelfareRequestActions");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.BeneficiaryType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.AttachmentType", b =>
                 {
-                    b.Navigation("MedicalWelfareRequests");
+                    b.Navigation("BatchRequestAttachments");
+
+                    b.Navigation("MemorandumAttachments");
+
+                    b.Navigation("WelfareRequestAttachments");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.BusinessNature", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequest", b =>
                 {
-                    b.Navigation("Labors");
+                    b.Navigation("BatchRequestActions");
+
+                    b.Navigation("BatchRequestAttachments");
+
+                    b.Navigation("WelfareRequests");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Directorate", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestStep", b =>
                 {
-                    b.Navigation("Labors");
-
-                    b.Navigation("Requests");
+                    b.Navigation("BatchRequestActions");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Gender", b =>
-                {
-                    b.Navigation("Labors");
-                });
-
-            modelBuilder.Entity("WelfareDataAccess.Entities.MaritalStatus", b =>
-                {
-                    b.Navigation("Labors");
-                });
-
-            modelBuilder.Entity("WelfareDataAccess.Entities.MedicalServiceProvider", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BeneficiaryType", b =>
                 {
                     b.Navigation("MedicalWelfareRequests");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Occupation", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BusinessNature", b =>
                 {
                     b.Navigation("Labors");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Party", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Directorate", b =>
+                {
+                    b.Navigation("Labors");
+
+                    b.Navigation("WelfareRequests");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Gender", b =>
                 {
                     b.Navigation("Labors");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.PartyType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MaritalStatus", b =>
+                {
+                    b.Navigation("Labors");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MedicalServiceProvider", b =>
+                {
+                    b.Navigation("MedicalWelfareRequests");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Memorandum", b =>
+                {
+                    b.Navigation("MemorandumAttachments");
+
+                    b.Navigation("WelfareRequests");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Occupation", b =>
+                {
+                    b.Navigation("Labors");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Party", b =>
+                {
+                    b.Navigation("Labors");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.PartyType", b =>
                 {
                     b.Navigation("Parties");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.RelativeRelationType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RelativeRelationType", b =>
                 {
                     b.Navigation("Beneficiaries");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.RelativeRelationship", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RelativeRelationship", b =>
                 {
                     b.Navigation("SocialWelfareRequests");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.Request", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RequestStatus", b =>
                 {
-                    b.Navigation("RequestAttachments");
+                    b.Navigation("WelfareRequests");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.RequestStatus", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RequestType", b =>
                 {
-                    b.Navigation("Requests");
+                    b.Navigation("Memoranda");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.RequesterRelevance", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RequesterRelevance", b =>
                 {
                     b.Navigation("SocialWelfareRequests");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.WelfareCategory", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareCategory", b =>
                 {
                     b.Navigation("WelfareTypes");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.WelfareType", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", b =>
                 {
-                    b.Navigation("AttachmentTypes");
+                    b.Navigation("WelfareRequestActions");
 
-                    b.Navigation("Requests");
+                    b.Navigation("WelfareRequestAttachments");
                 });
 
-            modelBuilder.Entity("WelfareDataAccess.Entities.SocialWelfareRequest", b =>
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequestStep", b =>
+                {
+                    b.Navigation("WelfareRequestActions");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareType", b =>
+                {
+                    b.Navigation("WelfareRequests");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WorkflowReason", b =>
+                {
+                    b.Navigation("BatchRequestActions");
+
+                    b.Navigation("WelfareRequestActions");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.SocialWelfareRequest", b =>
                 {
                     b.Navigation("Beneficiaries");
                 });

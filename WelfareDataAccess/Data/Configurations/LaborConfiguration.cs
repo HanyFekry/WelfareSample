@@ -3,97 +3,101 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class LaborConfiguration : IEntityTypeConfiguration<Labor>
 {
-    public partial class LaborConfiguration : IEntityTypeConfiguration<Labor>
+    public void Configure(EntityTypeBuilder<Labor> entity)
     {
-        public void Configure(EntityTypeBuilder<Labor> entity)
-        {
-            entity.ToTable("Labor");
+        entity.ToTable("Labor");
 
-            entity.Property(e => e.LaborId)
-                .ValueGeneratedNever()
-                .HasColumnName("LaborID");
-            entity.Property(e => e.GenderId).HasColumnName("FK_GenderID");
-            entity.Property(e => e.InsuranceSectorId).HasColumnName("FK_InsuranceSectorID");
-            entity.Property(e => e.LastBusinessNatureId).HasColumnName("FK_LastBusinessNatureID");
-            entity.Property(e => e.LastDirectorateId).HasColumnName("FK_LastDirectorateID");
-            entity.Property(e => e.LastExecutionPartyId).HasColumnName("FK_LastExecutionPartyID");
-            entity.Property(e => e.MaritalStatusId).HasColumnName("FK_MaritalStatusID");
-            entity.Property(e => e.OccupationId).HasColumnName("FK_OccupationID");
-            entity.Property(e => e.FullName).HasMaxLength(200);
-            entity.Property(e => e.InsuranceNo)
-                .HasMaxLength(9)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.IsBeneficiary)
-                .HasDefaultValue(true)
-                .HasComment("the worker's status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)");
-            entity.Property(e => e.MobileNo)
-                .HasMaxLength(13)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.NationalId)
-                .HasMaxLength(14)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("NationalID");
-            entity.Property(e => e.Notes).HasMaxLength(1000);
-            entity.Property(e => e.RegistrationNo)
-                .HasMaxLength(20)
-                .IsUnicode(false);
+        entity.HasIndex(e => e.GenderId, "IX_Labor_FK_GenderID");
 
-            entity.HasOne(d => d.Gender)
-                .WithMany(
-                    p => p.Labors
-                )
-                .HasForeignKey(d => d.GenderId)
-                .HasConstraintName("FK_Labor_Gender");
+        entity.HasIndex(e => e.LastBusinessNatureId, "IX_Labor_FK_LastBusinessNatureID");
 
-            entity.HasOne(d => d.LastBusinessNature)
-                .WithMany(
-                    p => p.Labors
-                )
-                .HasForeignKey(d => d.LastBusinessNatureId)
-                .HasConstraintName("FK_Labor_BusinessNature");
+        entity.HasIndex(e => e.LastDirectorateId, "IX_Labor_FK_LastDirectorateID");
 
-            entity.HasOne(d => d.LastDirectorate)
-                .WithMany(
-                    p => p.Labors
-                )
-                .HasForeignKey(d => d.LastDirectorateId)
-                .HasConstraintName("FK_Labor_Directorate");
+        entity.HasIndex(e => e.LastExecutionPartyId, "IX_Labor_FK_LastExecutionPartyID");
 
-            entity.HasOne(d => d.LastExecutionParty)
-                .WithMany(
-                    p => p.Labors
-                )
-                .HasForeignKey(d => d.LastExecutionPartyId)
-                .HasConstraintName("FK_Labor_Party");
+        entity.HasIndex(e => e.MaritalStatusId, "IX_Labor_FK_MaritalStatusID");
 
-            entity.HasOne(d => d.MaritalStatus)
-                .WithMany(
-                    p => p.Labors
-                )
-                .HasForeignKey(d => d.MaritalStatusId)
-                .HasConstraintName("FK_Labor_MaritalStatus");
+        entity.HasIndex(e => e.OccupationId, "IX_Labor_FK_OccupationID");
 
-            entity.HasOne(d => d.Occupation)
-                .WithMany(
-                    p => p.Labors
-                )
-                .HasForeignKey(d => d.OccupationId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_Labor_Occupation");
+        entity.Property(e => e.LaborId)
+            .ValueGeneratedNever()
+            .HasColumnName("LaborID");
+        entity.Property(e => e.GenderId).HasColumnName("FK_GenderID");
+        entity.Property(e => e.InsuranceSectorId).HasColumnName("FK_InsuranceSectorID");
+        entity.Property(e => e.LastBusinessNatureId).HasColumnName("FK_LastBusinessNatureID");
+        entity.Property(e => e.LastDirectorateId).HasColumnName("FK_LastDirectorateID");
+        entity.Property(e => e.LastExecutionPartyId).HasColumnName("FK_LastExecutionPartyID");
+        entity.Property(e => e.MaritalStatusId).HasColumnName("FK_MaritalStatusID");
+        entity.Property(e => e.OccupationId).HasColumnName("FK_OccupationID");
+        entity.Property(e => e.FullName).HasMaxLength(200);
+        entity.Property(e => e.InsuranceNo)
+            .HasMaxLength(9)
+            .IsUnicode(false)
+            .IsFixedLength();
+        entity.Property(e => e.IsBeneficiary)
+            .HasDefaultValue(true)
+            .HasComment("the worker's status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)");
+        entity.Property(e => e.MobileNo)
+            .HasMaxLength(13)
+            .IsUnicode(false)
+            .IsFixedLength();
+        entity.Property(e => e.NationalId)
+            .HasMaxLength(14)
+            .IsUnicode(false)
+            .IsFixedLength()
+            .HasColumnName("NationalID");
+        entity.Property(e => e.Notes).HasMaxLength(1000);
+        entity.Property(e => e.RegistrationNo)
+            .HasMaxLength(20)
+            .IsUnicode(false);
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<Labor> entity);
+        entity.HasOne(d => d.Gender)
+            .WithMany(
+                p => p.Labors
+            )
+            .HasForeignKey(d => d.GenderId)
+            ;
+        entity.HasOne(d => d.LastBusinessNature)
+            .WithMany(
+                p => p.Labors
+            )
+            .HasForeignKey(d => d.LastBusinessNatureId)
+            ;
+        entity.HasOne(d => d.LastDirectorate)
+            .WithMany(
+                p => p.Labors
+            )
+            .HasForeignKey(d => d.LastDirectorateId)
+            ;
+        entity.HasOne(d => d.LastExecutionParty)
+            .WithMany(
+                p => p.Labors
+            )
+            .HasForeignKey(d => d.LastExecutionPartyId)
+            ;
+        entity.HasOne(d => d.MaritalStatus)
+            .WithMany(
+                p => p.Labors
+            )
+            .HasForeignKey(d => d.MaritalStatusId)
+            ;
+        entity.HasOne(d => d.Occupation)
+            .WithMany(
+                p => p.Labors
+            )
+            .HasForeignKey(d => d.OccupationId)
+            ;
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<Labor> entity);
 }

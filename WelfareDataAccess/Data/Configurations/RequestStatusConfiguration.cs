@@ -3,36 +3,35 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class RequestStatusConfiguration : IEntityTypeConfiguration<RequestStatus>
 {
-    public partial class RequestStatusConfiguration : IEntityTypeConfiguration<RequestStatus>
+    public void Configure(EntityTypeBuilder<RequestStatus> entity)
     {
-        public void Configure(EntityTypeBuilder<RequestStatus> entity)
-        {
-            entity.ToTable("RequestStatus");
+        entity.ToTable("RequestStatus");
 
-            entity.Property(e => e.RequestStatusId)
-                .ValueGeneratedNever()
-                .HasComment("Unique identifier for each request status record")
-                .HasColumnName("RequestStatusID");
-            entity.Property(e => e.Code)
-                .HasMaxLength(30)
-                .HasComment("Code representing the request status");
-            entity.Property(e => e.Text)
-                .HasMaxLength(50)
-                .HasComment("English text description of the request status");
-            entity.Property(e => e.Text2)
-                .HasMaxLength(50)
-                .HasComment("Arabic text description of the request status");
+        entity.Property(e => e.RequestStatusId)
+            .ValueGeneratedNever()
+            .HasComment("Unique identifier for each request status record")
+            .HasColumnName("RequestStatusID");
+        entity.Property(e => e.Code)
+            .HasMaxLength(30)
+            .HasComment("Code representing the request status");
+        entity.Property(e => e.Text)
+            .HasMaxLength(50)
+            .HasComment("English text description of the request status");
+        entity.Property(e => e.Text2)
+            .HasMaxLength(50)
+            .HasComment("Arabic text description of the request status");
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<RequestStatus> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<RequestStatus> entity);
 }

@@ -3,30 +3,29 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class MedicalServiceProviderConfiguration : IEntityTypeConfiguration<MedicalServiceProvider>
 {
-    public partial class MedicalServiceProviderConfiguration : IEntityTypeConfiguration<MedicalServiceProvider>
+    public void Configure(EntityTypeBuilder<MedicalServiceProvider> entity)
     {
-        public void Configure(EntityTypeBuilder<MedicalServiceProvider> entity)
-        {
-            entity.ToTable("MedicalServiceProvider");
+        entity.ToTable("MedicalServiceProvider");
 
-            entity.Property(e => e.MedicalServiceProviderId).ValueGeneratedNever();
-            entity.Property(e => e.Code).HasMaxLength(30);
-            entity.Property(e => e.Iban)
-                .HasMaxLength(120)
-                .HasColumnName("IBAN");
-            entity.Property(e => e.Text).HasMaxLength(50);
-            entity.Property(e => e.Text2).HasMaxLength(50);
+        entity.Property(e => e.MedicalServiceProviderId).ValueGeneratedNever();
+        entity.Property(e => e.Code).HasMaxLength(30);
+        entity.Property(e => e.Iban)
+            .HasMaxLength(120)
+            .HasColumnName("IBAN");
+        entity.Property(e => e.Text).HasMaxLength(50);
+        entity.Property(e => e.Text2).HasMaxLength(50);
 
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<MedicalServiceProvider> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<MedicalServiceProvider> entity);
 }

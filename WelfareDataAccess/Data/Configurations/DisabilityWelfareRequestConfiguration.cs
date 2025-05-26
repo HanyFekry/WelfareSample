@@ -3,35 +3,27 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using WelfareDataAccess.Data;
-using WelfareDataAccess.Entities;
+
+
 
 #nullable disable
 
-namespace WelfareDataAccess.Data.Configurations
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
+
+public partial class DisabilityWelfareRequestConfiguration : IEntityTypeConfiguration<DisabilityWelfareRequest>
 {
-    public partial class DisabilityWelfareRequestConfiguration : IEntityTypeConfiguration<DisabilityWelfareRequest>
+    public void Configure(EntityTypeBuilder<DisabilityWelfareRequest> entity)
     {
-        public void Configure(EntityTypeBuilder<DisabilityWelfareRequest> entity)
-        {
-            //entity.HasKey(e => e.RequestId);
+        //entity.HasKey(e => e.RequestId);
 
-            entity.ToTable("DisabilityWelfareRequest");
+        entity.ToTable("DisabilityWelfareRequest");
 
-            //entity.Property(e => e.RequestId).ValueGeneratedNever();
-            entity.Property(e => e.DisabilityRatio).HasColumnType("decimal(2, 0)");
+        entity.Property(e => e.RequestId).ValueGeneratedNever();
+        entity.Property(e => e.DisabilityRatio).HasColumnType("decimal(2, 0)");
+        entity.Property(e => e.Description).HasMaxLength(255);
 
-            //entity.HasOne(d => d.Request)
-            //    .WithOne(
-            //        p => p.DisabilityRequest
-            //    )
-            //    .HasForeignKey<DisabilityRequest>(d => d.RequestId)
-            //    .OnDelete(DeleteBehavior.Cascade)
-            //    .HasConstraintName("FK_DisabilityRequest_Request");
-
-            OnConfigurePartial(entity);
-        }
-
-        partial void OnConfigurePartial(EntityTypeBuilder<DisabilityWelfareRequest> entity);
+        OnConfigurePartial(entity);
     }
+
+    partial void OnConfigurePartial(EntityTypeBuilder<DisabilityWelfareRequest> entity);
 }

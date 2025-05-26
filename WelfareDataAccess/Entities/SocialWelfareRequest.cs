@@ -1,7 +1,7 @@
-﻿namespace WelfareDataAccess.Entities;
-public class SocialWelfareRequest : Request
+﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
+public class SocialWelfareRequest : WelfareRequest
 {
-    //public long RequestId { get; set; }
+    public long RequestId { get; set; }
 
     public DateTime EventDate { get; set; }
 
@@ -20,7 +20,5 @@ public class SocialWelfareRequest : Request
     public RelativeRelationship? RelativeRelationship { get; set; }
 
     public RequesterRelevance? RequesterRelevance { get; set; }
-
-    //public Request Request { get; set; } = null!;
 }
 

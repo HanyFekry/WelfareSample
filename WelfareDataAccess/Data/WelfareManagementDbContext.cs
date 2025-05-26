@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using WelfareDataAccess.Entities;
 namespace WelfareDataAccess.Data;
 public partial class WelfareManagementDbContext : DbContext
 {
@@ -10,17 +9,25 @@ public partial class WelfareManagementDbContext : DbContext
     {
     }
 
+    public DbSet<ActionType> ActionTypes { get; set; }
+
     public DbSet<AttachmentType> AttachmentTypes { get; set; }
 
-    public DbSet<Beneficiary> Beneficiaries { get; set; }
+    public DbSet<BatchRequest> BatchRequests { get; set; }
 
-    public DbSet<BeneficiaryType> BeneficiaryTypes { get; set; }
+    public DbSet<BatchRequestAction> BatchRequestActions { get; set; }
+
+    public DbSet<BatchRequestAttachment> BatchRequestAttachments { get; set; }
+
+    public DbSet<BatchRequestStep> BatchRequestSteps { get; set; }
+
+    public DbSet<Beneficiary> Beneficiaries { get; set; }
 
     public DbSet<BusinessNature> BusinessNatures { get; set; }
 
     public DbSet<Directorate> Directorates { get; set; }
 
-    public DbSet<DisabilityWelfareRequest> DisabilityRequests { get; set; }
+    public DbSet<DisabilityWelfareRequest> DisabilityWelfareRequests { get; set; }
 
     public DbSet<Gender> Genders { get; set; }
 
@@ -28,9 +35,9 @@ public partial class WelfareManagementDbContext : DbContext
 
     public DbSet<MaritalStatus> MaritalStatuses { get; set; }
 
-    public DbSet<MedicalServiceProvider> MedicalServiceProviders { get; set; }
+    public DbSet<Memorandum> Memorandums { get; set; }
 
-    public DbSet<MedicalWelfareRequest> MedicalWelfareRequests { get; set; }
+    public DbSet<MemorandumAttachment> MemorandumAttachments { get; set; }
 
     public DbSet<NotificationReceiverType> NotificationReceiverTypes { get; set; }
 
@@ -44,10 +51,6 @@ public partial class WelfareManagementDbContext : DbContext
 
     public DbSet<RelativeRelationship> RelativeRelationships { get; set; }
 
-    public DbSet<Request> Requests { get; set; }
-
-    public DbSet<RequestAttachment> RequestAttachments { get; set; }
-
     public DbSet<RequestStatus> RequestStatuses { get; set; }
 
     public DbSet<RequestType> RequestTypes { get; set; }
@@ -58,14 +61,23 @@ public partial class WelfareManagementDbContext : DbContext
 
     public DbSet<WelfareCategory> WelfareCategories { get; set; }
 
+    public DbSet<WelfareRequest> WelfareRequests { get; set; }
+
+    public DbSet<WelfareRequestAction> WelfareRequestActions { get; set; }
+
+    public DbSet<WelfareRequestAttachment> WelfareRequestAttachments { get; set; }
+
+    public DbSet<WelfareRequestStep> WelfareRequestSteps { get; set; }
+
     public DbSet<WelfareType> WelfareTypes { get; set; }
+
+    public DbSet<WorkflowReason> WorkflowReasons { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        OnModelCreatingPartial(modelBuilder);
+        base.OnModelCreating(modelBuilder);
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

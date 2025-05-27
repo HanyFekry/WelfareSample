@@ -44,7 +44,10 @@ public partial class LaborConfiguration : IEntityTypeConfiguration<Labor>
             .IsUnicode(false)
             .IsFixedLength();
         entity.Property(e => e.IsBeneficiary)
-            .HasDefaultValue(true)
+            .HasComputedColumnSql(
+                "CASE WHEN [DeathDate] IS NULL AND [HasFullDisability] = 0 THEN CAST(1 AS bit) ELSE CAST(0 AS bit) END",
+                stored: true
+            )
             .HasComment("the worker's status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)");
         entity.Property(e => e.MobileNo)
             .HasMaxLength(13)
@@ -59,6 +62,7 @@ public partial class LaborConfiguration : IEntityTypeConfiguration<Labor>
         entity.Property(e => e.RegistrationNo)
             .HasMaxLength(20)
             .IsUnicode(false);
+        entity.Property(e => e.HasFullDisability).HasDefaultValue(false);
 
         entity.HasOne(d => d.Gender)
             .WithMany(

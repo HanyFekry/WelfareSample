@@ -8,6 +8,8 @@ public class WorkflowReason
     public string Text { get; set; } = null!;
 
     public string? Text2 { get; set; }
+    public bool IsDeleted { get; set; } = false;
+    public bool IsActive { get; set; } = true;
 
     public string WorkflowType { get; set; } = null!;
 

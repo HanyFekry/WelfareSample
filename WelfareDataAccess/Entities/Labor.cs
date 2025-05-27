@@ -34,7 +34,7 @@ public class Labor
     public int? InsurancePeriod { get; set; }
 
     public DateOnly? DeathDate { get; set; }
-    //public bool HasFullDisability { get; set; }
+    public bool HasFullDisability { get; set; }
 
     /// <summary>
     /// the worker&apos;s status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)

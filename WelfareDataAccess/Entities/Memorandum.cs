@@ -6,6 +6,7 @@ public class Memorandum : ITrackCreatedEntityEx, ITrackUpdatedEntityEx
     public string Title { get; set; } = null!;
 
     public string? Notes { get; set; }
+    public string MemorandumNo { get; set; } = default!;
 
     public int RequestType { get; set; }
 

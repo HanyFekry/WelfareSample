@@ -35,6 +35,8 @@ public partial class MemorandumConfiguration : IEntityTypeConfiguration<Memorand
         entity.Property(e => e.UpdatedUserName)
             .HasMaxLength(200)
             .HasComment("User name of the user who last updated the request record");
+        entity.Property(e => e.MemorandumNo)
+            .HasMaxLength(18);
 
         entity.HasOne(d => d.RequestTypeNavigation)
             .WithMany(

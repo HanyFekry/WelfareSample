@@ -47,7 +47,7 @@ public partial class WelfareRequestConfiguration : IEntityTypeConfiguration<Welf
             .HasColumnName("FK_WelfareTypeID");
         entity.Property(e => e.LaborMobileNo).HasMaxLength(12);
         entity.Property(e => e.Notes).HasMaxLength(256);
-        entity.Property(e => e.RequestNo).HasMaxLength(14);
+        entity.Property(e => e.RequestNo).HasMaxLength(18);
         entity.Property(e => e.UpdatedDate).HasComment("Date and time when the request record was last updated");
         entity.Property(e => e.UpdatedUserId)
             .HasMaxLength(100)

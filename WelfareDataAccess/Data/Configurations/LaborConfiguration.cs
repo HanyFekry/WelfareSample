@@ -32,7 +32,6 @@ public partial class LaborConfiguration : IEntityTypeConfiguration<Labor>
             .ValueGeneratedNever()
             .HasColumnName("LaborID");
         entity.Property(e => e.GenderId).HasColumnName("FK_GenderID");
-        entity.Property(e => e.InsuranceSectorId).HasColumnName("FK_InsuranceSectorID");
         entity.Property(e => e.LastBusinessNatureId).HasColumnName("FK_LastBusinessNatureID");
         entity.Property(e => e.LastDirectorateId).HasColumnName("FK_LastDirectorateID");
         entity.Property(e => e.LastExecutionPartyId).HasColumnName("FK_LastExecutionPartyID");
@@ -45,7 +44,7 @@ public partial class LaborConfiguration : IEntityTypeConfiguration<Labor>
             .IsFixedLength();
         entity.Property(e => e.IsBeneficiary)
             .HasComputedColumnSql(
-                "CASE WHEN [DeathDate] IS NULL AND [HasFullDisability] = 0 THEN CAST(1 AS bit) ELSE CAST(0 AS bit) END",
+                "CASE WHEN [DeathDate] IS NOT NULL OR [HasFullDisability] = 1 THEN CAST(0 AS bit) ELSE CAST(1 AS bit) END",
                 stored: true
             )
             .HasComment("the worker's status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)");
@@ -58,7 +57,6 @@ public partial class LaborConfiguration : IEntityTypeConfiguration<Labor>
             .IsUnicode(false)
             .IsFixedLength()
             .HasColumnName("NationalID");
-        entity.Property(e => e.Notes).HasMaxLength(1000);
         entity.Property(e => e.RegistrationNo)
             .HasMaxLength(20)
             .IsUnicode(false);

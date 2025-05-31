@@ -27,8 +27,8 @@ public partial class BeneficiaryConfiguration : IEntityTypeConfiguration<Benefic
             .HasComment("Amount to be disbursed for beneficiary")
             .HasColumnType("decimal(8, 2)");
         entity.Property(e => e.BeneficiaryName)
-            .HasMaxLength(10)
-            .IsFixedLength()
+            .HasMaxLength(120)
+            .IsUnicode()
             .HasComment("Beneficiary name");
         entity.Property(e => e.LaborId)
             .HasComment("Unique identifier for labor associated with request")

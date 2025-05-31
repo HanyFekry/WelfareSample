@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 
 
-
 #nullable disable
 
 namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
@@ -18,13 +17,9 @@ public partial class WelfareRequestAttachmentConfiguration : IEntityTypeConfigur
 
         entity.ToTable("WelfareRequestAttachment");
 
-        entity.HasIndex(e => e.AttachmentTypeId, "IX_RequestAttachments_FK_AttachmentTypeId");
-
-        entity.HasIndex(e => e.RequestId, "IX_RequestAttachments_FK_RequestId");
-
         entity.Property(e => e.AttachmentPath).HasMaxLength(200);
         entity.Property(e => e.AttachmentTypeId).HasColumnName("FK_AttachmentTypeId");
-        entity.Property(e => e.RequestId).HasColumnName("FK_RequestId");
+        entity.Property(e => e.WelfareRequestId).HasColumnName("FK_RequestId");
 
         entity.HasOne(d => d.AttachmentType)
             .WithMany(
@@ -33,11 +28,11 @@ public partial class WelfareRequestAttachmentConfiguration : IEntityTypeConfigur
             .HasForeignKey(d => d.AttachmentTypeId)
             .OnDelete(DeleteBehavior.Cascade)
             ;
-        entity.HasOne(d => d.Request)
+        entity.HasOne(d => d.WelfareRequest)
             .WithMany(
                 p => p.WelfareRequestAttachments
             )
-            .HasForeignKey(d => d.RequestId)
+            .HasForeignKey(d => d.WelfareRequestId)
             .OnDelete(DeleteBehavior.Cascade)
             ;
         OnConfigurePartial(entity);

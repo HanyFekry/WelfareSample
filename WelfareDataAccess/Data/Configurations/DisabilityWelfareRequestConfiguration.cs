@@ -18,7 +18,6 @@ public partial class DisabilityWelfareRequestConfiguration : IEntityTypeConfigur
 
         entity.ToTable("DisabilityWelfareRequest");
 
-        entity.Property(e => e.RequestId).ValueGeneratedNever();
         entity.Property(e => e.DisabilityRatio).HasColumnType("decimal(2, 0)");
         entity.Property(e => e.Description).HasMaxLength(255);
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WelfareDataAccess.Data;
 
@@ -11,9 +12,11 @@ using WelfareDataAccess.Data;
 namespace WelfareDataAccess.Migrations
 {
     [DbContext(typeof(WelfareManagementDbContext))]
-    partial class WelfareManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250527155035_update-IsBeneficiary")]
+    partial class updateIsBeneficiary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -589,6 +592,10 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("char(14)")
                         .HasColumnName("NationalID")
                         .IsFixedLength();
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<int>("OccupationId")
                         .HasColumnType("int")

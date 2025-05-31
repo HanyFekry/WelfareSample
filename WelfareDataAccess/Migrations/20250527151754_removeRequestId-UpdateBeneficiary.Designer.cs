@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WelfareDataAccess.Data;
 
@@ -11,9 +12,11 @@ using WelfareDataAccess.Data;
 namespace WelfareDataAccess.Migrations
 {
     [DbContext(typeof(WelfareManagementDbContext))]
-    partial class WelfareManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250527151754_removeRequestId-UpdateBeneficiary")]
+    partial class removeRequestIdUpdateBeneficiary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -553,10 +556,17 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("char(9)")
                         .IsFixedLength();
 
+                    b.Property<int?>("InsurancePeriod")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("InsuranceSectorId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_InsuranceSectorID");
+
                     b.Property<bool>("IsBeneficiary")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bit")
-                        .HasComputedColumnSql("CASE WHEN [DeathDate] IS NOT NULL OR [HasFullDisability] = 1 THEN CAST(0 AS bit) ELSE CAST(1 AS bit) END", true)
+                        .HasComputedColumnSql("CASE WHEN [DeathDate] IS NULL AND [HasFullDisability] = 0 THEN CAST(1 AS bit) ELSE CAST(0 AS bit) END", true)
                         .HasComment("the worker's status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)");
 
                     b.Property<int?>("LastBusinessNatureId")
@@ -589,6 +599,10 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("char(14)")
                         .HasColumnName("NationalID")
                         .IsFixedLength();
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<int>("OccupationId")
                         .HasColumnType("int")
@@ -1295,16 +1309,16 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("int")
                         .HasColumnName("FK_AttachmentTypeId");
 
-                    b.Property<long>("WelfareRequestId")
+                    b.Property<long>("RequestId")
                         .HasColumnType("bigint")
                         .HasColumnName("FK_RequestId");
 
                     b.HasKey("WelfareRequestAttachmentId")
                         .HasName("PK_RequestAttachments_1");
 
-                    b.HasIndex("AttachmentTypeId");
+                    b.HasIndex(new[] { "AttachmentTypeId" }, "IX_RequestAttachments_FK_AttachmentTypeId");
 
-                    b.HasIndex("WelfareRequestId");
+                    b.HasIndex(new[] { "RequestId" }, "IX_RequestAttachments_FK_RequestId");
 
                     b.ToTable("WelfareRequestAttachment", (string)null);
                 });
@@ -1758,15 +1772,15 @@ namespace WelfareDataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", "WelfareRequest")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", "Request")
                         .WithMany("WelfareRequestAttachments")
-                        .HasForeignKey("WelfareRequestId")
+                        .HasForeignKey("RequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AttachmentType");
 
-                    b.Navigation("WelfareRequest");
+                    b.Navigation("Request");
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareType", b =>

@@ -3,7 +3,7 @@ public class WelfareRequestAttachment
 {
     public long WelfareRequestAttachmentId { get; set; }
 
-    public long RequestId { get; set; }
+    public long WelfareRequestId { get; set; }
 
     public int AttachmentTypeId { get; set; }
 
@@ -11,6 +11,6 @@ public class WelfareRequestAttachment
 
     public AttachmentType AttachmentType { get; set; } = null!;
 
-    public WelfareRequest Request { get; set; } = null!;
+    public WelfareRequest WelfareRequest { get; set; } = null!;
 }
 

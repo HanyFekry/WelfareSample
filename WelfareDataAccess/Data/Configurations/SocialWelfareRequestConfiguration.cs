@@ -22,7 +22,6 @@ public partial class SocialWelfareRequestConfiguration : IEntityTypeConfiguratio
 
         entity.HasIndex(e => e.RequesterRelevanceId, "IX_SocialWelfareRequest_FK_RequesterRelevanceId");
 
-        entity.Property(e => e.RequestId).ValueGeneratedNever();
         entity.Property(e => e.RelativeRelationshipId).HasColumnName("FK_RelativeRelationshipId");
         entity.Property(e => e.RequesterRelevanceId).HasColumnName("FK_RequesterRelevanceId");
         entity.Property(e => e.NationalId)

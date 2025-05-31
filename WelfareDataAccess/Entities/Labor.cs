@@ -29,19 +29,14 @@ public class Labor
 
     public string? InsuranceNo { get; set; }
 
-    public int? InsuranceSectorId { get; set; }
-
-    public int? InsurancePeriod { get; set; }
-
     public DateOnly? DeathDate { get; set; }
+
     public bool HasFullDisability { get; set; }
 
     /// <summary>
     /// the worker&apos;s status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)
     /// </summary>
     public bool IsBeneficiary { get; set; }
-
-    public string? Notes { get; set; }
 
     public Gender? Gender { get; set; }
 

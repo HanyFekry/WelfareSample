@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WelfareDataAccess.Data;
 
@@ -11,9 +12,11 @@ using WelfareDataAccess.Data;
 namespace WelfareDataAccess.Migrations
 {
     [DbContext(typeof(WelfareManagementDbContext))]
-    partial class WelfareManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250527154051_update-wlfareRequest-labor-beneficiary")]
+    partial class updatewlfareRequestlaborbeneficiary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -556,7 +559,7 @@ namespace WelfareDataAccess.Migrations
                     b.Property<bool>("IsBeneficiary")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bit")
-                        .HasComputedColumnSql("CASE WHEN [DeathDate] IS NOT NULL OR [HasFullDisability] = 1 THEN CAST(0 AS bit) ELSE CAST(1 AS bit) END", true)
+                        .HasComputedColumnSql("CASE WHEN [DeathDate] IS NULL AND [HasFullDisability] = 0 THEN CAST(1 AS bit) ELSE CAST(0 AS bit) END", true)
                         .HasComment("the worker's status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)");
 
                     b.Property<int?>("LastBusinessNatureId")
@@ -589,6 +592,10 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("char(14)")
                         .HasColumnName("NationalID")
                         .IsFixedLength();
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<int>("OccupationId")
                         .HasColumnType("int")

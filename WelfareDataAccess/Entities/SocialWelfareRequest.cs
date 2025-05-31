@@ -1,9 +1,8 @@
 ﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
 public class SocialWelfareRequest : WelfareRequest
 {
-    public long RequestId { get; set; }
 
-    public DateTime EventDate { get; set; }
+    public DateOnly EventDate { get; set; }
 
     public string NationalId { get; set; } = null!;
 

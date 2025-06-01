@@ -60,6 +60,14 @@ public partial class LaborConfiguration : IEntityTypeConfiguration<Labor>
         entity.Property(e => e.RegistrationNo)
             .HasMaxLength(20)
             .IsUnicode(false);
+        entity.Property(e => e.UpdatedDate).HasComment("Date and time when the request record was last updated");
+        entity.Property(e => e.UpdatedUserId)
+            .HasMaxLength(100)
+            .IsUnicode(false)
+            .HasComment("User ID of the user who last updated the request record");
+        entity.Property(e => e.UpdatedUserName)
+            .HasMaxLength(200)
+            .HasComment("User name of the user who last updated the request record");
         entity.Property(e => e.HasFullDisability).HasDefaultValue(false);
 
         entity.HasOne(d => d.Gender)

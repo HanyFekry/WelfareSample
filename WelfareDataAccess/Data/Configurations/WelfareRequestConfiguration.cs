@@ -42,6 +42,9 @@ public partial class WelfareRequestConfiguration : IEntityTypeConfiguration<Welf
         entity.Property(e => e.RequestStatusId)
             .HasComment("Identifier for the current status of a current workflow")
             .HasColumnName("FK_RequestStatusID");
+        entity.Property(e => e.WelfareRequestStatusId)
+            .HasComment("Identifier for the current status of a current workflow")
+            .HasColumnName("FK_WelfareRequestStatusID");
         entity.Property(e => e.WelfareTypeId)
             .HasComment("Identifier for the type of request")
             .HasColumnName("FK_WelfareTypeID");
@@ -85,12 +88,31 @@ public partial class WelfareRequestConfiguration : IEntityTypeConfiguration<Welf
             )
             .HasForeignKey(d => d.RequestStatusId)
             ;
+        entity.HasOne(d => d.WelfareRequestStatus)
+            .WithMany(
+                p => p.WelfareRequests
+            )
+            .HasForeignKey(d => d.WelfareRequestStatusId)
+            ;
         entity.HasOne(d => d.WelfareType)
             .WithMany(
                 p => p.WelfareRequests
             )
             .HasForeignKey(d => d.WelfareTypeId)
             ;
+        entity.OwnsMany<StepConfiguration>(
+            e => e.StepConfigurations,
+            b =>
+            {
+                b.ToTable("WelfareRequestStepConfiguration");
+                b.Property(e => e.Role).HasMaxLength(100)
+                    .HasComment("Role responsible for this step");
+
+                b.Property(e => e.ActionTypeID)
+                    .IsRequired()
+                    .HasComment("Action type for this step");
+            }
+        );
         OnConfigurePartial(entity);
     }
 

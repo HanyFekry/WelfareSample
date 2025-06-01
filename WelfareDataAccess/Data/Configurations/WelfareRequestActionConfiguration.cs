@@ -36,6 +36,7 @@ public partial class WelfareRequestActionConfiguration : IEntityTypeConfiguratio
         entity.Property(e => e.WorkflowReasonId)
             .HasComment("Reason for workflow action, if applicable")
             .HasColumnName("FK_WorkflowReasonID");
+        entity.Property(x => x.Notes).HasMaxLength(255);
 
         entity.HasOne(d => d.ActionType)
             .WithMany(

@@ -1,7 +1,10 @@
-﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
+﻿using S3.MoL.WelfareManagement.Domain.Enums;
+
+namespace S3.MoL.WelfareManagement.Domain.Entities;
 public class WelfareRequest : ITrackCreatedEntityEx, ITrackUpdatedEntityEx
 {
     public long WelfareRequestId { get; set; }
+    public long RequestUUID { get; set; }
 
     public string RequestNo { get; set; } = null!;
 
@@ -21,6 +24,11 @@ public class WelfareRequest : ITrackCreatedEntityEx, ITrackUpdatedEntityEx
     /// Identifier for the current status of a current workflow
     /// </summary>
     public int RequestStatusId { get; set; }
+
+    /// <summary>
+    /// Identifier for the current status of the welfare request
+    /// </summary>
+    public WelfareRequestStatuses WelfareRequestStatusId { get; set; }
 
     /// <summary>
     /// Date and time when the request was created
@@ -75,7 +83,10 @@ public class WelfareRequest : ITrackCreatedEntityEx, ITrackUpdatedEntityEx
 
     public RequestStatus RequestStatus { get; set; } = null!;
 
+    public WelfareRequestStatus WelfareRequestStatus { get; set; } = default!;
+
     public WelfareType WelfareType { get; set; } = null!;
+    public ICollection<StepConfiguration>? StepConfigurations { get; set; }
 
     public ICollection<WelfareRequestAction> WelfareRequestActions { get; set; } = new List<WelfareRequestAction>();
 

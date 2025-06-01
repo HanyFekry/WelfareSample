@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WelfareDataAccess.Data;
 
@@ -11,9 +12,11 @@ using WelfareDataAccess.Data;
 namespace WelfareDataAccess.Migrations
 {
     [DbContext(typeof(WelfareManagementDbContext))]
-    partial class WelfareManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250531163107_updateWelfareRequestStatus")]
+    partial class updateWelfareRequestStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -602,21 +605,6 @@ namespace WelfareDataAccess.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(20)");
 
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2")
-                        .HasComment("Date and time when the request record was last updated");
-
-                    b.Property<string>("UpdatedUserId")
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
-                        .HasComment("User ID of the user who last updated the request record");
-
-                    b.Property<string>("UpdatedUserName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasComment("User name of the user who last updated the request record");
-
                     b.HasKey("LaborId");
 
                     b.HasIndex(new[] { "GenderId" }, "IX_Labor_FK_GenderID");
@@ -1190,9 +1178,6 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("int")
                         .HasColumnName("FK_RequestStatusID")
                         .HasComment("Identifier for the current status of a current workflow");
-
-                    b.Property<long>("RequestUUID")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2")

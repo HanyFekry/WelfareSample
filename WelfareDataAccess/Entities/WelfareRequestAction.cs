@@ -28,6 +28,8 @@ public class WelfareRequestAction
     /// </summary>
     public int ActionTypeId { get; set; }
 
+    public string? Notes { get; set; } = default!;
+
     /// <summary>
     /// User name of the user who created the request record
     /// </summary>

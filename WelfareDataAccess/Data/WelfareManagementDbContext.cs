@@ -73,6 +73,10 @@ public partial class WelfareManagementDbContext : DbContext
 
     public DbSet<WorkflowReason> WorkflowReasons { get; set; }
 
+    public DbSet<WelfareRequestStatus> WelfareRequestStatuses { get; set; }
+
+    public DbSet<StepConfiguration> StepConfigurations { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

@@ -1,5 +1,5 @@
 ﻿namespace S3.MoL.WelfareManagement.Domain.Entities;
-public class Labor
+public class Labor : ITrackUpdatedEntityEx
 {
     public long LaborId { get; set; }
 
@@ -49,5 +49,8 @@ public class Labor
     public MaritalStatus? MaritalStatus { get; set; }
 
     public Occupation Occupation { get; set; } = null!;
+    public string? UpdatedUserId { get; set; }
+    public DateTime? UpdatedDate { get; set; }
+    public string? UpdatedUserName { get; set; }
 }
 

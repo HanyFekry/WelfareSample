@@ -33,7 +33,8 @@ public partial class WelfareRequestConfiguration : IEntityTypeConfiguration<Welf
             .HasComment("User name of the user who created the request record");
         entity.Property(e => e.CreatedDate).HasComment("Date and time when the request was created");
         entity.Property(e => e.DueAmount).HasColumnType("decimal(8, 2)");
-        entity.Property(e => e.BatchId).HasColumnName("FK_BatchId");
+        entity.Property(e => e.DisbursementId).HasColumnName("FK_DisbursementId");
+        entity.Property(e => e.LastWelfareRequestStepId).HasColumnName("FK_LastWelfareRequestStepId");
         entity.Property(e => e.DirectorateId)
             .HasComment("Identifier for the directorate associated with the request")
             .HasColumnName("FK_DirectorateID");
@@ -48,7 +49,7 @@ public partial class WelfareRequestConfiguration : IEntityTypeConfiguration<Welf
         entity.Property(e => e.WelfareTypeId)
             .HasComment("Identifier for the type of request")
             .HasColumnName("FK_WelfareTypeID");
-        entity.Property(e => e.LaborMobileNo).HasMaxLength(12);
+        entity.Property(e => e.LaborMobileNo).HasMaxLength(13);
         entity.Property(e => e.Notes).HasMaxLength(256);
         entity.Property(e => e.RequestNo).HasMaxLength(18);
         entity.Property(e => e.UpdatedDate).HasComment("Date and time when the request record was last updated");
@@ -64,17 +65,46 @@ public partial class WelfareRequestConfiguration : IEntityTypeConfiguration<Welf
             .IsConcurrencyToken()
             .HasComment("Timestamp for version control of the request record");
 
-        entity.HasOne(d => d.Batch)
+        entity.Property(e => e.AssignedToUserId)
+            .HasMaxLength(100)
+            .IsUnicode(false);
+        entity.Property(e => e.AssignedToUserName)
+            .HasMaxLength(200);
+        entity.Property(e => e.IsEligible)
+            .HasComment("Indicates if the request is eligible for disbursement");
+        entity.Property(e => e.EligibilityReason)
+            .HasMaxLength(256);
+        entity.Property(e => e.AssignedUserRole)
+
+            .HasMaxLength(150);
+
+        // Enum stored as int
+        entity.Property(e => e.ServiceDeliveryMethodId).HasColumnName("FK_ServiceDeliveryMethodId")//;
+            .HasConversion<int>();
+
+        entity.HasOne(d => d.ServiceDeliveryMethod)
             .WithMany(
                 p => p.WelfareRequests
             )
-            .HasForeignKey(d => d.BatchId)
+            .HasForeignKey(d => d.ServiceDeliveryMethodId);
+
+        entity.HasOne(d => d.DisbursementRequest)
+            .WithMany(
+                p => p.WelfareRequests
+            )
+            .HasForeignKey(d => d.DisbursementId)
             ;
         entity.HasOne(d => d.Directorate)
             .WithMany(
                 p => p.WelfareRequests
             )
             .HasForeignKey(d => d.DirectorateId)
+            ;
+        entity.HasOne(d => d.Labor)
+            .WithMany(
+                p => p.WelfareRequests
+            )
+            .HasForeignKey(d => d.LaborId)
             ;
         entity.HasOne(d => d.Memorandum)
             .WithMany(
@@ -100,6 +130,9 @@ public partial class WelfareRequestConfiguration : IEntityTypeConfiguration<Welf
             )
             .HasForeignKey(d => d.WelfareTypeId)
             ;
+        entity.Property(e => e.IsSystemCancelled)
+            .HasDefaultValue(false);
+
         entity.OwnsMany<StepConfiguration>(
             e => e.StepConfigurations,
             b =>

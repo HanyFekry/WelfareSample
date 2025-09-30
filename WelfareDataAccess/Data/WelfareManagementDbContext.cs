@@ -13,13 +13,11 @@ public partial class WelfareManagementDbContext : DbContext
 
     public DbSet<AttachmentType> AttachmentTypes { get; set; }
 
-    public DbSet<BatchRequest> BatchRequests { get; set; }
+    public DbSet<DisbursementRequest> DisbursementRequests { get; set; }
 
-    public DbSet<BatchRequestAction> BatchRequestActions { get; set; }
+    public DbSet<DisbursementRequestAction> DisbursementRequestActions { get; set; }
 
-    public DbSet<BatchRequestAttachment> BatchRequestAttachments { get; set; }
-
-    public DbSet<BatchRequestStep> BatchRequestSteps { get; set; }
+    public DbSet<DisbursementRequestStep> DisbursementRequestSteps { get; set; }
 
     public DbSet<Beneficiary> Beneficiaries { get; set; }
 
@@ -36,8 +34,6 @@ public partial class WelfareManagementDbContext : DbContext
     public DbSet<MaritalStatus> MaritalStatuses { get; set; }
 
     public DbSet<Memorandum> Memorandums { get; set; }
-
-    public DbSet<MemorandumAttachment> MemorandumAttachments { get; set; }
 
     public DbSet<NotificationReceiverType> NotificationReceiverTypes { get; set; }
 
@@ -76,6 +72,23 @@ public partial class WelfareManagementDbContext : DbContext
     public DbSet<WelfareRequestStatus> WelfareRequestStatuses { get; set; }
 
     public DbSet<StepConfiguration> StepConfigurations { get; set; }
+
+    public DbSet<PaymentChannel> PaymentChannels { get; set; }
+
+    public DbSet<DisbursementPaymentData> DisbursementPaymentData { get; set; }
+    public DbSet<MedicalServiceProvider> MedicalServiceProviders { get; set; }
+    public DbSet<ServiceDeliveryMethod> ServiceDeliveryMethods { get; set; }
+
+    public DbSet<MedicalWelfareRequest> MedicalWelfareRequests { get; set; }
+    public DbSet<WelfareLocalAction> WelfareLocalActions { get; set; }
+    public DbSet<Grant> Grants { get; set; }
+    public DbSet<GrantType> GrantTypes { get; set; }
+    public DbSet<GrantAction> GrantActions { get; set; }
+    public DbSet<GrantStep> GrantSteps { get; set; }
+    public DbSet<GrantBeneficiary> GrantBeneficiaries { get; set; }
+    public DbSet<GrantDisbursementRequest> GrantDisbursementRequests { get; set; }
+    public DbSet<GrantDisbursementRequestAction> GrantDisbursementRequestActions { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

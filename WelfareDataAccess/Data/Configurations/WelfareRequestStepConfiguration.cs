@@ -8,21 +8,22 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class WelfareRequestStepConfiguration : IEntityTypeConfiguration<WelfareRequestStep>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<WelfareRequestStep> entity)
+    public partial class WelfareRequestStepConfiguration : IEntityTypeConfiguration<WelfareRequestStep>
     {
-        entity.ToTable("WelfareRequestStep");
+        public void Configure(EntityTypeBuilder<WelfareRequestStep> entity)
+        {
+            entity.ToTable("WelfareRequestStep");
 
-        entity.Property(e => e.WelfareRequestStepId).ValueGeneratedNever();
-        entity.Property(e => e.Code).HasMaxLength(50);
-        entity.Property(e => e.Text).HasMaxLength(50);
-        entity.Property(e => e.Text2).HasMaxLength(50);
+            entity.Property(e => e.WelfareRequestStepId).ValueGeneratedNever();
+            entity.Property(e => e.Code).HasMaxLength(50);
+            entity.Property(e => e.Text).HasMaxLength(50);
+            entity.Property(e => e.Text2).HasMaxLength(50);
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<WelfareRequestStep> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<WelfareRequestStep> entity);
 }

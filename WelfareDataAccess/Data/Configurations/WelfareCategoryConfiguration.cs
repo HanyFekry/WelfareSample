@@ -8,20 +8,21 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class WelfareCategoryConfiguration : IEntityTypeConfiguration<WelfareCategory>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<WelfareCategory> entity)
+    public partial class WelfareCategoryConfiguration : IEntityTypeConfiguration<WelfareCategory>
     {
-        entity.ToTable("WelfareCategory", tb => tb.HasComment("Monetary or "));
+        public void Configure(EntityTypeBuilder<WelfareCategory> entity)
+        {
+            entity.ToTable("WelfareCategory", tb => tb.HasComment("Monetary or "));
 
-        entity.Property(e => e.Code).HasMaxLength(30);
-        entity.Property(e => e.Text).HasMaxLength(50);
-        entity.Property(e => e.Text2).HasMaxLength(50);
+            entity.Property(e => e.Code).HasMaxLength(30);
+            entity.Property(e => e.Text).HasMaxLength(50);
+            entity.Property(e => e.Text2).HasMaxLength(50);
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<WelfareCategory> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<WelfareCategory> entity);
 }

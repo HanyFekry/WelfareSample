@@ -8,23 +8,24 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class RelativeRelationTypeConfiguration : IEntityTypeConfiguration<RelativeRelationType>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<RelativeRelationType> entity)
+    public partial class RelativeRelationTypeConfiguration : IEntityTypeConfiguration<RelativeRelationType>
     {
-        entity.ToTable("RelativeRelationType");
+        public void Configure(EntityTypeBuilder<RelativeRelationType> entity)
+        {
+            entity.ToTable("RelativeRelationType");
 
-        entity.Property(e => e.RelativeRelationTypeId)
-            .ValueGeneratedNever()
-            .HasColumnName("RelativeRelationTypeID");
-        entity.Property(e => e.Code).HasMaxLength(30);
-        entity.Property(e => e.Text).HasMaxLength(50);
-        entity.Property(e => e.Text2).HasMaxLength(50);
+            entity.Property(e => e.RelativeRelationTypeId)
+                .ValueGeneratedNever()
+                .HasColumnName("RelativeRelationTypeID");
+            entity.Property(e => e.Code).HasMaxLength(30);
+            entity.Property(e => e.Text).HasMaxLength(50);
+            entity.Property(e => e.Text2).HasMaxLength(50);
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<RelativeRelationType> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<RelativeRelationType> entity);
 }

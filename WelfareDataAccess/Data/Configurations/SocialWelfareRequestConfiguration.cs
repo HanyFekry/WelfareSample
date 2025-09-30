@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 
 
@@ -16,12 +17,15 @@ public partial class SocialWelfareRequestConfiguration : IEntityTypeConfiguratio
     {
         //entity.HasKey(e => e.RequestId);
 
+        //entity.HasKey(e => e.WelfareRequestId);
+
         entity.ToTable("SocialWelfareRequest");
 
         entity.HasIndex(e => e.RelativeRelationshipId, "IX_SocialWelfareRequest_FK_RelativeRelationshipId");
 
         entity.HasIndex(e => e.RequesterRelevanceId, "IX_SocialWelfareRequest_FK_RequesterRelevanceId");
 
+        //entity.Property(e => e.WelfareRequestId).ValueGeneratedNever();
         entity.Property(e => e.RelativeRelationshipId).HasColumnName("FK_RelativeRelationshipId");
         entity.Property(e => e.RequesterRelevanceId).HasColumnName("FK_RequesterRelevanceId");
         entity.Property(e => e.NationalId)
@@ -39,6 +43,7 @@ public partial class SocialWelfareRequestConfiguration : IEntityTypeConfiguratio
             .WithMany(
                 p => p.SocialWelfareRequests
             ).HasForeignKey(d => d.RequesterRelevanceId);
+
 
         OnConfigurePartial(entity);
     }

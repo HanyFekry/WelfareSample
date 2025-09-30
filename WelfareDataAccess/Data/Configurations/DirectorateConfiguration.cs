@@ -8,37 +8,38 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class DirectorateConfiguration : IEntityTypeConfiguration<Directorate>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<Directorate> entity)
+    public partial class DirectorateConfiguration : IEntityTypeConfiguration<Directorate>
     {
-        entity.ToTable("Directorate", tb => tb.HasComment("Table storing directorates"));
+        public void Configure(EntityTypeBuilder<Directorate> entity)
+        {
+            entity.ToTable("Directorate", tb => tb.HasComment("Table storing directorates"));
 
-        entity.Property(e => e.DirectorateId)
-            .ValueGeneratedNever()
-            .HasComment("Unique identifier for the directorate")
-            .HasColumnName("DirectorateID");
-        entity.Property(e => e.Code)
-            .HasMaxLength(30)
-            .HasComment("Code representing the directorate");
-        entity.Property(e => e.GovernorateId)
-            .HasComment("Foreign key to the Governorate table")
-            .HasColumnName("FK_GovernorateID");
-        entity.Property(e => e.IsActive)
-            .HasDefaultValue(true)
-            .HasComment("Indicates if the directorate is active");
-        entity.Property(e => e.IsDeleted).HasComment("Indicates if the directorate is deleted");
-        entity.Property(e => e.Text)
-            .HasMaxLength(50)
-            .HasComment("English text description of the directorate");
-        entity.Property(e => e.Text2)
-            .HasMaxLength(50)
-            .HasComment("Arabic text description of the directorate");
+            entity.Property(e => e.DirectorateId)
+                .ValueGeneratedNever()
+                .HasComment("Unique identifier for the directorate")
+                .HasColumnName("DirectorateID");
+            entity.Property(e => e.Code)
+                .HasMaxLength(30)
+                .HasComment("Code representing the directorate");
+            entity.Property(e => e.GovernorateId)
+                .HasComment("Foreign key to the Governorate table")
+                .HasColumnName("FK_GovernorateID");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasComment("Indicates if the directorate is active");
+            entity.Property(e => e.IsDeleted).HasComment("Indicates if the directorate is deleted");
+            entity.Property(e => e.Text)
+                .HasMaxLength(50)
+                .HasComment("English text description of the directorate");
+            entity.Property(e => e.Text2)
+                .HasMaxLength(50)
+                .HasComment("Arabic text description of the directorate");
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<Directorate> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<Directorate> entity);
 }

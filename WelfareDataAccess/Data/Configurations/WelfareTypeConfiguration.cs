@@ -8,56 +8,57 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class WelfareTypeConfiguration : IEntityTypeConfiguration<WelfareType>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<WelfareType> entity)
+    public partial class WelfareTypeConfiguration : IEntityTypeConfiguration<WelfareType>
     {
-        entity.ToTable("WelfareType");
+        public void Configure(EntityTypeBuilder<WelfareType> entity)
+        {
+            entity.ToTable("WelfareType");
 
-        entity.HasIndex(e => e.WelfareCategoryId, "IX_WelfareType_FK_WelfareCategoryId");
+            entity.HasIndex(e => e.WelfareCategoryId, "IX_WelfareType_FK_WelfareCategoryId");
 
-        entity.Property(e => e.WelfareTypeId)
-            .ValueGeneratedNever()
-            .HasComment("Unique identifier for each Welfare type")
-            .HasColumnName("WelfareTypeID");
-        entity.Property(e => e.Code)
-            .HasMaxLength(30)
-            .HasComment("Code representing the Welfare type");
-        entity.Property(e => e.WelfareCategoryId).HasColumnName("FK_WelfareCategoryId");
-        entity.Property(e => e.Text)
-            .HasMaxLength(50)
-            .HasComment("English text description of the Welfare type");
-        entity.Property(e => e.Text2)
-            .HasMaxLength(50)
-            .HasComment("Arabic text description of the Welfare type");
-        entity.Property(e => e.WelfareAmount).HasColumnType("decimal(8, 2)");
+            entity.Property(e => e.WelfareTypeId)
+                .ValueGeneratedNever()
+                .HasComment("Unique identifier for each Welfare type")
+                .HasColumnName("WelfareTypeID");
+            entity.Property(e => e.Code)
+                .HasMaxLength(30)
+                .HasComment("Code representing the Welfare type");
+            entity.Property(e => e.WelfareCategoryId).HasColumnName("FK_WelfareCategoryId");
+            entity.Property(e => e.Text)
+                .HasMaxLength(50)
+                .HasComment("English text description of the Welfare type");
+            entity.Property(e => e.Text2)
+                .HasMaxLength(50)
+                .HasComment("Arabic text description of the Welfare type");
+            entity.Property(e => e.WelfareAmount).HasColumnType("decimal(8, 2)");
 
-        entity.HasOne(d => d.WelfareCategory)
-            .WithMany(
-                p => p.WelfareTypes
-            ).HasForeignKey(d => d.WelfareCategoryId);
+            entity.HasOne(d => d.WelfareCategory)
+                .WithMany(
+                    p => p.WelfareTypes
+                ).HasForeignKey(d => d.WelfareCategoryId);
 
-        entity.HasMany(d => d.AttachmentTypes).WithMany(p => p.WelfareTypes)
-            .UsingEntity<Dictionary<string, object>>(
-                "WelfareTypesAttachmentTypes",
-                r => r.HasOne<AttachmentType>().WithMany()
-                    .HasForeignKey("AttachmentTypeId")
-                    .OnDelete(DeleteBehavior.Cascade),
-                l => l.HasOne<WelfareType>().WithMany()
-                    .HasForeignKey("WelfareTypeId")
-                    .OnDelete(DeleteBehavior.Cascade),
-                j =>
-                {
-                    j.HasKey("WelfareTypeId", "AttachmentTypeId");
-                    j.ToTable("WelfareTypesAttachmentTypes");
-                    j.IndexerProperty<int>("WelfareTypeId").HasColumnName("WelfareTypeID");
-                    j.IndexerProperty<int>("AttachmentTypeId").HasColumnName("AttachmentTypeID");
-                });
+            entity.HasMany(d => d.AttachmentTypes).WithMany(p => p.WelfareTypes)
+                .UsingEntity<Dictionary<string, object>>(
+                    "WelfareTypesAttachmentTypes",
+                    r => r.HasOne<AttachmentType>().WithMany()
+                        .HasForeignKey("AttachmentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade),
+                    l => l.HasOne<WelfareType>().WithMany()
+                        .HasForeignKey("WelfareTypeId")
+                        .OnDelete(DeleteBehavior.Cascade),
+                    j =>
+                    {
+                        j.HasKey("WelfareTypeId", "AttachmentTypeId");
+                        j.ToTable("WelfareTypesAttachmentTypes");
+                        j.IndexerProperty<int>("WelfareTypeId").HasColumnName("WelfareTypeID");
+                        j.IndexerProperty<int>("AttachmentTypeId").HasColumnName("AttachmentTypeID");
+                    });
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<WelfareType> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<WelfareType> entity);
 }

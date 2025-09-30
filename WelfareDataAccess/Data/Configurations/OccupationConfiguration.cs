@@ -8,31 +8,32 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class OccupationConfiguration : IEntityTypeConfiguration<Occupation>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<Occupation> entity)
+    public partial class OccupationConfiguration : IEntityTypeConfiguration<Occupation>
     {
-        entity.ToTable("Occupation");
+        public void Configure(EntityTypeBuilder<Occupation> entity)
+        {
+            entity.ToTable("Occupation");
 
-        entity.Property(e => e.OccupationId)
-            .ValueGeneratedNever()
-            .HasComment("Unique identifier for each occupation record")
-            .HasColumnName("OccupationID");
-        entity.Property(e => e.Code)
-            .HasMaxLength(30)
-            .HasComment("Code representing the occupation");
-        entity.Property(e => e.IsActive).HasDefaultValue(true);
-        entity.Property(e => e.Text)
-            .HasMaxLength(50)
-            .HasComment("English text description of the occupation");
-        entity.Property(e => e.Text2)
-            .HasMaxLength(50)
-            .HasComment("Arabic text description of the occupation");
+            entity.Property(e => e.OccupationId)
+                .ValueGeneratedNever()
+                .HasComment("Unique identifier for each occupation record")
+                .HasColumnName("OccupationID");
+            entity.Property(e => e.Code)
+                .HasMaxLength(30)
+                .HasComment("Code representing the occupation");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.Text)
+                .HasMaxLength(50)
+                .HasComment("English text description of the occupation");
+            entity.Property(e => e.Text2)
+                .HasMaxLength(50)
+                .HasComment("Arabic text description of the occupation");
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<Occupation> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<Occupation> entity);
 }

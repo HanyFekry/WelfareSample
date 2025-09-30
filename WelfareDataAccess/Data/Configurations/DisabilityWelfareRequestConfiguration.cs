@@ -16,10 +16,13 @@ public partial class DisabilityWelfareRequestConfiguration : IEntityTypeConfigur
     {
         //entity.HasKey(e => e.RequestId);
 
+        //entity.HasKey(e => e.WelfareRequestId);
+
         entity.ToTable("DisabilityWelfareRequest");
 
-        entity.Property(e => e.DisabilityRatio).HasColumnType("decimal(2, 0)");
+        //entity.Property(e => e.WelfareRequestId).ValueGeneratedNever();
         entity.Property(e => e.Description).HasMaxLength(255);
+        entity.Property(e => e.DisabilityRatio).HasColumnType("decimal(2, 0)");
 
         OnConfigurePartial(entity);
     }

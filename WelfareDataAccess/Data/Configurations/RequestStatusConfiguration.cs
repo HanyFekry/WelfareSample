@@ -8,30 +8,31 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class RequestStatusConfiguration : IEntityTypeConfiguration<RequestStatus>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<RequestStatus> entity)
+    public partial class RequestStatusConfiguration : IEntityTypeConfiguration<RequestStatus>
     {
-        entity.ToTable("RequestStatus");
+        public void Configure(EntityTypeBuilder<RequestStatus> entity)
+        {
+            entity.ToTable("RequestStatus");
 
-        entity.Property(e => e.RequestStatusId)
-            .ValueGeneratedNever()
-            .HasComment("Unique identifier for each request status record")
-            .HasColumnName("RequestStatusID");
-        entity.Property(e => e.Code)
-            .HasMaxLength(30)
-            .HasComment("Code representing the request status");
-        entity.Property(e => e.Text)
-            .HasMaxLength(50)
-            .HasComment("English text description of the request status");
-        entity.Property(e => e.Text2)
-            .HasMaxLength(50)
-            .HasComment("Arabic text description of the request status");
+            entity.Property(e => e.RequestStatusId)
+                .ValueGeneratedNever()
+                .HasComment("Unique identifier for each request status record")
+                .HasColumnName("RequestStatusID");
+            entity.Property(e => e.Code)
+                .HasMaxLength(30)
+                .HasComment("Code representing the request status");
+            entity.Property(e => e.Text)
+                .HasMaxLength(50)
+                .HasComment("English text description of the request status");
+            entity.Property(e => e.Text2)
+                .HasMaxLength(50)
+                .HasComment("Arabic text description of the request status");
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<RequestStatus> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<RequestStatus> entity);
 }

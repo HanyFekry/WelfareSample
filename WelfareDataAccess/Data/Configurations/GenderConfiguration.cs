@@ -8,31 +8,32 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class GenderConfiguration : IEntityTypeConfiguration<Gender>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<Gender> entity)
+    public partial class GenderConfiguration : IEntityTypeConfiguration<Gender>
     {
-        entity.ToTable("Gender", tb => tb.HasComment("Table storing gender information"));
+        public void Configure(EntityTypeBuilder<Gender> entity)
+        {
+            entity.ToTable("Gender", tb => tb.HasComment("Table storing gender information"));
 
-        entity.Property(e => e.GenderId)
-            .ValueGeneratedNever()
-            .HasComment("Unique identifier for the gender")
-            .HasColumnName("GenderID");
-        entity.Property(e => e.Code)
-            .HasMaxLength(30)
-            .HasComment("Code representing the gender");
-        entity.Property(e => e.IsActive).HasDefaultValue(true);
-        entity.Property(e => e.Text)
-            .HasMaxLength(50)
-            .HasComment("English text description of the gender");
-        entity.Property(e => e.Text2)
-            .HasMaxLength(50)
-            .HasComment("Arabic text description of the gender");
+            entity.Property(e => e.GenderId)
+                .ValueGeneratedNever()
+                .HasComment("Unique identifier for the gender")
+                .HasColumnName("GenderID");
+            entity.Property(e => e.Code)
+                .HasMaxLength(30)
+                .HasComment("Code representing the gender");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.Text)
+                .HasMaxLength(50)
+                .HasComment("English text description of the gender");
+            entity.Property(e => e.Text2)
+                .HasMaxLength(50)
+                .HasComment("Arabic text description of the gender");
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<Gender> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<Gender> entity);
 }

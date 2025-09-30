@@ -8,30 +8,31 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class PartyConfiguration : IEntityTypeConfiguration<Party>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<Party> entity)
+    public partial class PartyConfiguration : IEntityTypeConfiguration<Party>
     {
-        entity.ToTable("Party");
+        public void Configure(EntityTypeBuilder<Party> entity)
+        {
+            entity.ToTable("Party");
 
-        entity.HasIndex(e => e.PartyTypeId, "IX_Party_FK_PartyTypeID");
+            entity.HasIndex(e => e.PartyTypeId, "IX_Party_FK_PartyTypeID");
 
-        entity.Property(e => e.PartyId)
-            .ValueGeneratedNever()
-            .HasColumnName("PartyID");
-        entity.Property(e => e.PartyTypeId).HasColumnName("FK_PartyTypeID");
-        entity.Property(e => e.Name).HasMaxLength(200);
+            entity.Property(e => e.PartyId)
+                .ValueGeneratedNever()
+                .HasColumnName("PartyID");
+            entity.Property(e => e.PartyTypeId).HasColumnName("FK_PartyTypeID");
+            entity.Property(e => e.Name).HasMaxLength(200);
 
-        entity.HasOne(d => d.PartyType)
-            .WithMany(
-                p => p.Parties
-            )
-            .HasForeignKey(d => d.PartyTypeId)
-            ;
-        OnConfigurePartial(entity);
+            entity.HasOne(d => d.PartyType)
+                .WithMany(
+                    p => p.Parties
+                )
+                .HasForeignKey(d => d.PartyTypeId)
+                ;
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<Party> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<Party> entity);
 }

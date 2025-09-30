@@ -8,25 +8,26 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class RequesterRelevanceConfiguration : IEntityTypeConfiguration<RequesterRelevance>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<RequesterRelevance> entity)
+    public partial class RequesterRelevanceConfiguration : IEntityTypeConfiguration<RequesterRelevance>
     {
-        entity.HasKey(e => e.RequesterRelevantId).HasName("PK_RequesterRelevant");
+        public void Configure(EntityTypeBuilder<RequesterRelevance> entity)
+        {
+            entity.HasKey(e => e.RequesterRelevantId).HasName("PK_RequesterRelevant");
 
-        entity.ToTable("RequesterRelevance", tb => tb.HasComment("Labor or Medical provider or Other"));
+            entity.ToTable("RequesterRelevance", tb => tb.HasComment("Labor or Medical provider or Other"));
 
-        entity.Property(e => e.RequesterRelevantId)
-            .ValueGeneratedNever()
-            .HasColumnName("RequesterRelevantID");
-        entity.Property(e => e.Code).HasMaxLength(30);
-        entity.Property(e => e.Text).HasMaxLength(50);
-        entity.Property(e => e.Text2).HasMaxLength(50);
+            entity.Property(e => e.RequesterRelevantId)
+                .ValueGeneratedNever()
+                .HasColumnName("RequesterRelevantID");
+            entity.Property(e => e.Code).HasMaxLength(30);
+            entity.Property(e => e.Text).HasMaxLength(50);
+            entity.Property(e => e.Text2).HasMaxLength(50);
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<RequesterRelevance> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<RequesterRelevance> entity);
 }

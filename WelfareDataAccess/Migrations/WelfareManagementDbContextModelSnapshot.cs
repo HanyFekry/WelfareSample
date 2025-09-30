@@ -22,19 +22,19 @@ namespace WelfareDataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ActionTypeBatchRequestStep", b =>
+            modelBuilder.Entity("ActionTypeDisbursementRequestStep", b =>
                 {
                     b.Property<int>("ActionTypesActionTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("BatchRequestStepsBatchRequestStepId")
+                    b.Property<int>("DisbursementRequestStepsDisbursementRequestStepId")
                         .HasColumnType("int");
 
-                    b.HasKey("ActionTypesActionTypeId", "BatchRequestStepsBatchRequestStepId");
+                    b.HasKey("ActionTypesActionTypeId", "DisbursementRequestStepsDisbursementRequestStepId");
 
-                    b.HasIndex("BatchRequestStepsBatchRequestStepId");
+                    b.HasIndex("DisbursementRequestStepsDisbursementRequestStepId");
 
-                    b.ToTable("ActionTypeBatchRequestStep");
+                    b.ToTable("ActionTypeDisbursementRequestStep");
                 });
 
             modelBuilder.Entity("ActionTypeWelfareRequestStep", b =>
@@ -50,6 +50,36 @@ namespace WelfareDataAccess.Migrations
                     b.HasIndex("WelfareRequestStepsWelfareRequestStepId");
 
                     b.ToTable("ActionTypeWelfareRequestStep");
+                });
+
+            modelBuilder.Entity("GrantGrantBeneficiary", b =>
+                {
+                    b.Property<long>("GrantBeneficiariesGrantBeneficiaryId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("GrantsGrantId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("GrantBeneficiariesGrantBeneficiaryId", "GrantsGrantId");
+
+                    b.HasIndex("GrantsGrantId");
+
+                    b.ToTable("GrantGrantBeneficiary");
+                });
+
+            modelBuilder.Entity("GrantLabor", b =>
+                {
+                    b.Property<long>("GrantsGrantId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LaborsLaborId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("GrantsGrantId", "LaborsLaborId");
+
+                    b.HasIndex("LaborsLaborId");
+
+                    b.ToTable("GrantLabor");
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.ActionType", b =>
@@ -83,10 +113,6 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("int")
                         .HasColumnName("AttachmentTypeID")
                         .HasComment("Unique identifier for the attachment type");
-
-                    b.Property<int>("AttachmentEntityType")
-                        .HasColumnType("int")
-                        .HasComment("Enum value(WelfareRequest,Memorandum,Batch)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -126,186 +152,10 @@ namespace WelfareDataAccess.Migrations
 
                     b.HasKey("AttachmentTypeId");
 
-                    b.HasIndex(new[] { "AttachmentEntityType" }, "IX_AttachmentType_FK_WelfareTypeID");
-
                     b.ToTable("AttachmentType", null, t =>
                         {
                             t.HasComment("Table storing attachment types");
                         });
-                });
-
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequest", b =>
-                {
-                    b.Property<int>("BatchRequestId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("BatchNo")
-                        .IsRequired()
-                        .HasMaxLength(18)
-                        .HasColumnType("nvarchar(18)");
-
-                    b.Property<string>("CreatedByUserId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
-                        .HasComment("User ID of the user who created the request record");
-
-                    b.Property<string>("CreatedByUserName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasComment("User name of the user who created the request record");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2")
-                        .HasComment("Date and time when the request was created");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(400)
-                        .HasColumnType("nvarchar(400)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<decimal?>("TotalAmount")
-                        .HasColumnType("decimal(12, 2)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("datetime2")
-                        .HasComment("Date and time when the request record was last updated");
-
-                    b.Property<string>("UpdatedUserId")
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
-                        .HasComment("User ID of the user who last updated the request record");
-
-                    b.Property<string>("UpdatedUserName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasComment("User name of the user who last updated the request record");
-
-                    b.HasKey("BatchRequestId");
-
-                    b.ToTable("BatchRequest", (string)null);
-                });
-
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestAction", b =>
-                {
-                    b.Property<long>("BatchRequestActionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("BatchRequestActionId"));
-
-                    b.Property<int>("ActionTypeId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_ActionTypeID")
-                        .HasComment("Type of action performed");
-
-                    b.Property<int>("BatchRequestId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_BatchRequestID")
-                        .HasComment("Parent request identifier");
-
-                    b.Property<int>("BatchRequestStepId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_BatchRequestStepId")
-                        .HasComment("Current step in workflow for the action");
-
-                    b.Property<string>("CreatedByUserId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)")
-                        .HasComment("User ID of the user who created the request record");
-
-                    b.Property<string>("CreatedByUserName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasComment("User name of the user who created the request record");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2")
-                        .HasComment("Date and time when the request was created");
-
-                    b.Property<int?>("WorkflowReasonId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_WorkflowReasonID")
-                        .HasComment("Reason for workflow action, if applicable");
-
-                    b.HasKey("BatchRequestActionId");
-
-                    b.HasIndex("ActionTypeId");
-
-                    b.HasIndex("BatchRequestId");
-
-                    b.HasIndex("BatchRequestStepId");
-
-                    b.HasIndex("WorkflowReasonId");
-
-                    b.ToTable("BatchRequestAction", (string)null);
-                });
-
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestAttachment", b =>
-                {
-                    b.Property<int>("BatchAttachmentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BatchAttachmentId"));
-
-                    b.Property<string>("AttachmentPath")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("AttachmentTypeId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_AttachmentTypeId");
-
-                    b.Property<int>("BatchId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_BatchId");
-
-                    b.HasKey("BatchAttachmentId");
-
-                    b.HasIndex("AttachmentTypeId");
-
-                    b.HasIndex("BatchId");
-
-                    b.ToTable("BatchRequestAttachment", (string)null);
-                });
-
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestStep", b =>
-                {
-                    b.Property<int>("BatchRequestStepId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("Code representing the request step");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("English text description of the request step");
-
-                    b.Property<string>("Text2")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasComment("Arabic text description of the request step");
-
-                    b.HasKey("BatchRequestStepId");
-
-                    b.ToTable("BatchRequestStep", (string)null);
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Beneficiary", b =>
@@ -333,6 +183,9 @@ namespace WelfareDataAccess.Migrations
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)")
                         .HasColumnName("IBAN");
+
+                    b.Property<bool>("IsDisbursed")
+                        .HasColumnType("bit");
 
                     b.Property<long?>("LaborId")
                         .HasColumnType("bigint")
@@ -481,6 +334,216 @@ namespace WelfareDataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.DisbursementPaymentData", b =>
+                {
+                    b.Property<long>("DisbursementPaymentDataId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("DisbursementPaymentDataId"));
+
+                    b.Property<string>("BeneficiaryNationalId")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
+
+                    b.Property<int>("DisbursementRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("WelfareRequestId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("WelfareRequestStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WelfareTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DisbursementPaymentDataId");
+
+                    b.ToTable("DisbursementPaymentData", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequest", b =>
+                {
+                    b.Property<int>("DisbursementRequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DisbursementRequestId"));
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<string>("DisbursementNo")
+                        .IsRequired()
+                        .HasMaxLength(18)
+                        .HasColumnType("nvarchar(18)");
+
+                    b.Property<string>("DisbursementPaymentDataPath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("path of Disbursement payment data Attachment");
+
+                    b.Property<string>("DisbursementRequestAttachmentPath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("path of Disbursement Request Attachment");
+
+                    b.Property<int?>("LastDisbursementRequestStepId")
+                        .HasColumnType("int")
+                        .HasComment("Identifier for the last step in the disbursement request workflow");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<int>("RequestStatusId")
+                        .HasColumnType("int")
+                        .HasComment("Identifier for the current status of a current workflow");
+
+                    b.Property<long>("RequestUUID")
+                        .HasColumnType("bigint")
+                        .HasComment("Unique identifier for the request");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("decimal(12, 2)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request record was last updated");
+
+                    b.Property<string>("UpdatedUserId")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who last updated the request record");
+
+                    b.Property<string>("UpdatedUserName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who last updated the request record");
+
+                    b.HasKey("DisbursementRequestId");
+
+                    b.ToTable("DisbursementRequest", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequestAction", b =>
+                {
+                    b.Property<long>("DisbursementRequestActionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("DisbursementRequestActionId"));
+
+                    b.Property<int>("ActionTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_ActionTypeID")
+                        .HasComment("Type of action performed");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<DateTime?>("DisbursementDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisbursementRequestId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_DisbursementRequestID")
+                        .HasComment("Parent request identifier");
+
+                    b.Property<int>("DisbursementRequestStepId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_DisbursementRequestStepId")
+                        .HasComment("Current step in workflow for the action");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<int?>("PaymentChannelId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_PaymentChannelId")
+                        .HasComment("approved payment channel");
+
+                    b.Property<string>("TransactionInfo")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("DisbursementRequestActionId");
+
+                    b.HasIndex("ActionTypeId");
+
+                    b.HasIndex("DisbursementRequestId");
+
+                    b.HasIndex("DisbursementRequestStepId");
+
+                    b.HasIndex("PaymentChannelId");
+
+                    b.ToTable("DisbursementRequestAction", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequestStep", b =>
+                {
+                    b.Property<int>("DisbursementRequestStepId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Code representing the request step");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("English text description of the request step");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Arabic text description of the request step");
+
+                    b.HasKey("DisbursementRequestStepId");
+
+                    b.ToTable("DisbursementRequestStep", (string)null);
+                });
+
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Gender", b =>
                 {
                     b.Property<int>("GenderId")
@@ -521,6 +584,530 @@ namespace WelfareDataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Grant", b =>
+                {
+                    b.Property<long>("GrantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("GrantID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("GrantId"));
+
+                    b.Property<string>("AttachmentPath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("Path to the beneficiaries attachment file related to the exceptional grant");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasComment("Description of the grant");
+
+                    b.Property<int>("DirectorateId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("DueAmount")
+                        .HasColumnType("decimal(8, 2)");
+
+                    b.Property<DateOnly>("DueDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("GrantCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GrantNo")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasComment("auto generated grant no of the grant");
+
+                    b.Property<int>("GrantStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GrantTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("InitiateDate")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRegistered")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("1")
+                        .HasComment("Indicates whether the grant includes registered labors or unregistered beneficiaries");
+
+                    b.Property<int?>("LastGrantStepId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PaymentChannelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestStatusId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("RequestUUId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TotalBeneficiariesNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TransferNotes")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request record was last updated");
+
+                    b.Property<string>("UpdatedUserId")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who last updated the request record");
+
+                    b.Property<string>("UpdatedUserName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who last updated the request record");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion")
+                        .HasComment("Timestamp for version control of the request record");
+
+                    b.HasKey("GrantId");
+
+                    b.HasIndex("DirectorateId");
+
+                    b.HasIndex("GrantTypeId");
+
+                    b.HasIndex("PaymentChannelId");
+
+                    b.ToTable("Grants");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantAction", b =>
+                {
+                    b.Property<long>("GrantActionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("GrantActionId"));
+
+                    b.Property<int>("ActionTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_ActionTypeID")
+                        .HasComment("Type of action performed");
+
+                    b.Property<string>("AttachmentPath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<long>("GrantId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("FK_GrantID")
+                        .HasComment("Parent request identifier");
+
+                    b.Property<int>("GrantStepId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_GrantStepId")
+                        .HasComment("Current step in workflow for the action");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<int?>("WorkflowReasonId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_WorkflowReasonID")
+                        .HasComment("Reason for workflow action, if applicable");
+
+                    b.HasKey("GrantActionId");
+
+                    b.HasIndex("ActionTypeId");
+
+                    b.HasIndex("GrantId");
+
+                    b.HasIndex("GrantStepId");
+
+                    b.HasIndex("WorkflowReasonId");
+
+                    b.ToTable("GrantAction", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantBeneficiary", b =>
+                {
+                    b.Property<long>("GrantBeneficiaryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("GrantBeneficiaryID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("GrantBeneficiaryId"));
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<string>("BankName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("BranchName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("IBan")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<long?>("LaborId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("MobileNo")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .IsUnicode(false)
+                        .HasColumnType("char(13)")
+                        .IsFixedLength();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NationalId")
+                        .IsRequired()
+                        .HasMaxLength(14)
+                        .IsUnicode(false)
+                        .HasColumnType("char(14)")
+                        .HasColumnName("NationalID")
+                        .IsFixedLength();
+
+                    b.Property<string>("Occupation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GrantBeneficiaryId");
+
+                    b.ToTable("GrantBeneficiaries");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantCategory", b =>
+                {
+                    b.Property<int>("GrantCategoryId")
+                        .HasColumnType("int")
+                        .HasColumnName("GrantCategoryID")
+                        .HasComment("Unique identifier for the gender");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)")
+                        .HasComment("Code representing the gender");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("English text description of the gender");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasComment("Arabic text description of the gender");
+
+                    b.HasKey("GrantCategoryId");
+
+                    b.ToTable("GrantCategory", null, t =>
+                        {
+                            t.HasComment("Table storing gender information");
+                        });
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantDisbursementRequest", b =>
+                {
+                    b.Property<int>("GrantDisbursementRequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GrantDisbursementRequestId"));
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<string>("DisbursementNo")
+                        .IsRequired()
+                        .HasMaxLength(18)
+                        .HasColumnType("nvarchar(18)");
+
+                    b.Property<string>("DisbursementPaymentDataPath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("path of Disbursement payment data Attachment");
+
+                    b.Property<string>("DisbursementRequestAttachmentPath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("path of Disbursement Request Attachment");
+
+                    b.Property<long>("GrantId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDisbursed")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LastDisbursementRequestStepId")
+                        .HasColumnType("int")
+                        .HasComment("Identifier for the last step in the disbursement request workflow");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<int>("RequestStatusId")
+                        .HasColumnType("int")
+                        .HasComment("Identifier for the current status of a current workflow");
+
+                    b.Property<long>("RequestUUID")
+                        .HasColumnType("bigint")
+                        .HasComment("Unique identifier for the request");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("decimal(12, 2)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request record was last updated");
+
+                    b.Property<string>("UpdatedUserId")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who last updated the request record");
+
+                    b.Property<string>("UpdatedUserName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who last updated the request record");
+
+                    b.HasKey("GrantDisbursementRequestId");
+
+                    b.HasIndex("GrantId")
+                        .IsUnique();
+
+                    b.ToTable("GrantDisbursementRequest", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantDisbursementRequestAction", b =>
+                {
+                    b.Property<long>("DisbursementRequestActionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("DisbursementRequestActionId"));
+
+                    b.Property<int>("ActionTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_ActionTypeID")
+                        .HasComment("Type of action performed");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<DateTime?>("DisbursementDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisbursementRequestStepId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_DisbursementRequestStepId")
+                        .HasComment("Current step in workflow for the action");
+
+                    b.Property<int>("GrantDisbursementRequestId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_GrantDisbursementRequestID")
+                        .HasComment("Parent request identifier");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<int?>("PaymentChannelId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_PaymentChannelId")
+                        .HasComment("approved payment channel");
+
+                    b.Property<string>("TransactionInfo")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("DisbursementRequestActionId");
+
+                    b.HasIndex("ActionTypeId");
+
+                    b.HasIndex("DisbursementRequestStepId");
+
+                    b.HasIndex("GrantDisbursementRequestId");
+
+                    b.HasIndex("PaymentChannelId");
+
+                    b.ToTable("GrantDisbursementRequestAction", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantStep", b =>
+                {
+                    b.Property<int>("GrantStepId")
+                        .HasColumnType("int")
+                        .HasColumnName("GrantStepID");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasComment("Indicates if the Grant Step is active");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasComment("Indicates if the Grant Step is deleted");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("GrantStepId");
+
+                    b.ToTable("GrantStep", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantType", b =>
+                {
+                    b.Property<int>("GrantTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GrantTypeId"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int?>("GrantCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasComment("Indicates if the business nature is active");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasComment("Indicates if the business nature is deleted");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("GrantTypeId");
+
+                    b.HasIndex("GrantCategoryId");
+
+                    b.ToTable("GrantType", (string)null);
+                });
+
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Labor", b =>
                 {
                     b.Property<long>("LaborId")
@@ -532,6 +1119,10 @@ namespace WelfareDataAccess.Migrations
 
                     b.Property<DateOnly?>("DeathDate")
                         .HasColumnType("date");
+
+                    b.Property<string>("ExclusionReason")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -547,16 +1138,22 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<int?>("InsuranceDurationInMonths")
+                        .HasColumnType("int");
+
                     b.Property<string>("InsuranceNo")
                         .HasMaxLength(9)
                         .IsUnicode(false)
                         .HasColumnType("char(9)")
                         .IsFixedLength();
 
+                    b.Property<int?>("InsuranceSectorId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsBeneficiary")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("bit")
-                        .HasComputedColumnSql("CASE WHEN [DeathDate] IS NOT NULL OR [HasFullDisability] = 1 THEN CAST(0 AS bit) ELSE CAST(1 AS bit) END", true)
+                        .HasComputedColumnSql("case when [DeathDate] IS NOT NULL OR [HasFullDisability]=(1) OR ([InsuranceSectorId] != 4 AND [InsuranceSectorId] != 9 AND [InsuranceSectorId] != NULL) OR [ExclusionReason] IS NOT NULL then CONVERT([bit],(0)) else CONVERT([bit],(1)) end", true)
                         .HasComment("the worker's status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)");
 
                     b.Property<int?>("LastBusinessNatureId")
@@ -700,49 +1297,6 @@ namespace WelfareDataAccess.Migrations
                     b.ToTable("MedicalServiceProvider", (string)null);
                 });
 
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MedicalWelfareRequest", b =>
-                {
-                    b.Property<long>("RequestId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("BeneficiaryIban")
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)")
-                        .HasColumnName("BeneficiaryIBAN");
-
-                    b.Property<string>("BeneficiaryName")
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
-
-                    b.Property<int?>("BeneficiaryNid")
-                        .HasColumnType("int")
-                        .HasColumnName("BeneficiaryNId");
-
-                    b.Property<int?>("BeneficiaryTypeId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_BeneficiaryTypeId");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int?>("MedicalServiceProviderId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_MedicalServiceProviderId");
-
-                    b.Property<byte?>("NoOfPrescriptions")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("RequestId");
-
-                    b.HasIndex(new[] { "BeneficiaryTypeId" }, "IX_MedicalWelfareRequest_FK_BeneficiaryTypeId");
-
-                    b.HasIndex(new[] { "MedicalServiceProviderId" }, "IX_MedicalWelfareRequest_FK_MedicalServiceProviderId");
-
-                    b.ToTable("MedicalWelfareRequest", (string)null);
-                });
-
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Memorandum", b =>
                 {
                     b.Property<int>("MemorandumId")
@@ -767,6 +1321,12 @@ namespace WelfareDataAccess.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2")
                         .HasComment("Date and time when the request was created");
+
+                    b.Property<string>("MemorandumAttachmentPath")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("path of memorandum Attachment");
 
                     b.Property<string>("MemorandumNo")
                         .IsRequired()
@@ -806,36 +1366,6 @@ namespace WelfareDataAccess.Migrations
                     b.HasIndex("RequestType");
 
                     b.ToTable("Memorandum", (string)null);
-                });
-
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MemorandumAttachment", b =>
-                {
-                    b.Property<int>("MemorandumAttachmentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MemorandumAttachmentId"));
-
-                    b.Property<string>("AttachmentPath")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("AttachmentTypeId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_AttachmentTypeId");
-
-                    b.Property<int>("MemorandumId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_MemorandumId");
-
-                    b.HasKey("MemorandumAttachmentId");
-
-                    b.HasIndex("AttachmentTypeId");
-
-                    b.HasIndex("MemorandumId");
-
-                    b.ToTable("MemorandumAttachments");
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.NotificationReceiverType", b =>
@@ -959,6 +1489,63 @@ namespace WelfareDataAccess.Migrations
                     b.HasKey("PartyTypeId");
 
                     b.ToTable("PartyType", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.PaymentChannel", b =>
+                {
+                    b.Property<int>("PaymentChannelID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AccountNo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("IsActive");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("IsDeleted");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("PaymentChannelID");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.HasIndex("Text", "IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
+                    b.HasIndex("Text2", "IsDeleted")
+                        .IsUnique()
+                        .HasFilter("[Text2] IS NOT NULL AND [IsDeleted] = 0");
+
+                    b.ToTable("PaymentChannel", (string)null);
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RelativeRelationType", b =>
@@ -1101,6 +1688,41 @@ namespace WelfareDataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.ServiceDeliveryMethod", b =>
+                {
+                    b.Property<int>("ServiceDeliveryMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("ExpirationDurationInDays")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("ServiceDeliveryMethodId");
+
+                    b.ToTable("ServiceDeliveryMethod", (string)null);
+                });
+
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareCategory", b =>
                 {
                     b.Property<byte>("WelfareCategoryId")
@@ -1128,6 +1750,90 @@ namespace WelfareDataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareLocalAction", b =>
+                {
+                    b.Property<long>("WelfareLocalActionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("WelfareLocalActionId"));
+
+                    b.Property<string>("AttachmentPath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)")
+                        .HasComment("User ID of the user who created the request record");
+
+                    b.Property<string>("CreatedByUserName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasComment("User name of the user who created the request record");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2")
+                        .HasComment("Date and time when the request was created");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<int>("WelfareLocalActionTypeId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_WelfareLocalActionTypeID")
+                        .HasComment("Type of action performed");
+
+                    b.Property<long>("WelfareRequestId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("FK_WelfareRequestID")
+                        .HasComment("Parent request identifier");
+
+                    b.Property<int?>("WorkflowReasonId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_WorkflowReasonID")
+                        .HasComment("Reason for workflow action, if applicable");
+
+                    b.HasKey("WelfareLocalActionId");
+
+                    b.HasIndex("WelfareLocalActionTypeId");
+
+                    b.HasIndex("WelfareRequestId");
+
+                    b.HasIndex("WorkflowReasonId");
+
+                    b.ToTable("WelfareLocalAction", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareLocalActionType", b =>
+                {
+                    b.Property<int>("WelfareLocalActionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Text2")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("WelfareLocalActionTypeId")
+                        .HasName("PK_WelfareLocalActionType");
+
+                    b.ToTable("WelfareLocalActionType", (string)null);
+                });
+
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", b =>
                 {
                     b.Property<long>("WelfareRequestId")
@@ -1136,9 +1842,18 @@ namespace WelfareDataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("WelfareRequestId"));
 
-                    b.Property<int?>("BatchId")
-                        .HasColumnType("int")
-                        .HasColumnName("FK_BatchId");
+                    b.Property<string>("AssignedToUserId")
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("AssignedToUserName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("AssignedUserRole")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("CreatedByUserId")
                         .IsRequired()
@@ -1162,16 +1877,37 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnName("FK_DirectorateID")
                         .HasComment("Identifier for the directorate associated with the request");
 
-                    b.Property<decimal>("DueAmount")
+                    b.Property<int?>("DisbursementId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_DisbursementId");
+
+                    b.Property<decimal?>("DueAmount")
                         .HasColumnType("decimal(8, 2)");
 
-                    b.Property<int>("LaborId")
-                        .HasColumnType("int")
+                    b.Property<string>("EligibilityReason")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool?>("IsEligible")
+                        .HasColumnType("bit")
+                        .HasComment("Indicates if the request is eligible for disbursement");
+
+                    b.Property<bool>("IsSystemCancelled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<long>("LaborId")
+                        .HasColumnType("bigint")
                         .HasColumnName("FK_LaborId");
 
                     b.Property<string>("LaborMobileNo")
-                        .HasMaxLength(12)
-                        .HasColumnType("nvarchar(12)");
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
+                    b.Property<int?>("LastWelfareRequestStepId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_LastWelfareRequestStepId");
 
                     b.Property<int?>("MemorandumId")
                         .HasColumnType("int")
@@ -1193,6 +1929,10 @@ namespace WelfareDataAccess.Migrations
 
                     b.Property<long>("RequestUUID")
                         .HasColumnType("bigint");
+
+                    b.Property<int?>("ServiceDeliveryMethodId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_ServiceDeliveryMethodId");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2")
@@ -1228,9 +1968,13 @@ namespace WelfareDataAccess.Migrations
 
                     b.HasKey("WelfareRequestId");
 
-                    b.HasIndex("BatchId");
+                    b.HasIndex("DisbursementId");
+
+                    b.HasIndex("LaborId");
 
                     b.HasIndex("MemorandumId");
+
+                    b.HasIndex("ServiceDeliveryMethodId");
 
                     b.HasIndex("WelfareRequestStatusId");
 
@@ -1258,6 +2002,10 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnName("FK_ActionTypeID")
                         .HasComment("Type of action performed");
 
+                    b.Property<string>("AttachmentPath")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("CreatedByUserId")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1276,8 +2024,8 @@ namespace WelfareDataAccess.Migrations
                         .HasComment("Date and time when the request was created");
 
                     b.Property<string>("Notes")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.Property<long>("WelfareRequestId")
                         .HasColumnType("bigint")
@@ -1443,10 +2191,20 @@ namespace WelfareDataAccess.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("RequestType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -1456,12 +2214,6 @@ namespace WelfareDataAccess.Migrations
                     b.Property<string>("Text2")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("WorkflowType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
 
                     b.HasKey("WorkflowReasonId");
 
@@ -1496,10 +2248,41 @@ namespace WelfareDataAccess.Migrations
                     b.Property<decimal?>("DisabilityRatio")
                         .HasColumnType("decimal(2, 0)");
 
-                    b.Property<DateOnly>("EventDate")
+                    b.Property<DateOnly?>("EventDate")
                         .HasColumnType("date");
 
                     b.ToTable("DisabilityWelfareRequest", (string)null);
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MedicalWelfareRequest", b =>
+                {
+                    b.HasBaseType("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest");
+
+                    b.Property<int?>("BeneficiaryTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<DateOnly?>("EventDate")
+                        .HasColumnType("date");
+
+                    b.Property<bool>("IsReviewed")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("MedicalServiceProviderId")
+                        .HasColumnType("int")
+                        .HasColumnName("FK_MedicalServiceProviderId");
+
+                    b.Property<byte?>("NoOfPrescriptions")
+                        .HasColumnType("tinyint");
+
+                    b.HasIndex("BeneficiaryTypeId");
+
+                    b.HasIndex(new[] { "MedicalServiceProviderId" }, "IX_MedicalWelfareRequest_FK_MedicalServiceProviderId");
+
+                    b.ToTable("MedicalWelfareRequest", (string)null);
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.SocialWelfareRequest", b =>
@@ -1538,7 +2321,7 @@ namespace WelfareDataAccess.Migrations
                     b.ToTable("SocialWelfareRequest", (string)null);
                 });
 
-            modelBuilder.Entity("ActionTypeBatchRequestStep", b =>
+            modelBuilder.Entity("ActionTypeDisbursementRequestStep", b =>
                 {
                     b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.ActionType", null)
                         .WithMany()
@@ -1546,9 +2329,9 @@ namespace WelfareDataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestStep", null)
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequestStep", null)
                         .WithMany()
-                        .HasForeignKey("BatchRequestStepsBatchRequestStepId")
+                        .HasForeignKey("DisbursementRequestStepsDisbursementRequestStepId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -1568,56 +2351,34 @@ namespace WelfareDataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestAction", b =>
+            modelBuilder.Entity("GrantGrantBeneficiary", b =>
                 {
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.ActionType", "ActionType")
-                        .WithMany("BatchRequestActions")
-                        .HasForeignKey("ActionTypeId")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.GrantBeneficiary", null)
+                        .WithMany()
+                        .HasForeignKey("GrantBeneficiariesGrantBeneficiaryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BatchRequest", "BatchRequest")
-                        .WithMany("BatchRequestActions")
-                        .HasForeignKey("BatchRequestId")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Grant", null)
+                        .WithMany()
+                        .HasForeignKey("GrantsGrantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestStep", "BatchRequestStep")
-                        .WithMany("BatchRequestActions")
-                        .HasForeignKey("BatchRequestStepId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WorkflowReason", "WorkflowReason")
-                        .WithMany("BatchRequestActions")
-                        .HasForeignKey("WorkflowReasonId");
-
-                    b.Navigation("ActionType");
-
-                    b.Navigation("BatchRequest");
-
-                    b.Navigation("BatchRequestStep");
-
-                    b.Navigation("WorkflowReason");
                 });
 
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestAttachment", b =>
+            modelBuilder.Entity("GrantLabor", b =>
                 {
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.AttachmentType", "AttachmentType")
-                        .WithMany("BatchRequestAttachments")
-                        .HasForeignKey("AttachmentTypeId")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Grant", null)
+                        .WithMany()
+                        .HasForeignKey("GrantsGrantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BatchRequest", "Batch")
-                        .WithMany("BatchRequestAttachments")
-                        .HasForeignKey("BatchId")
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Labor", null)
+                        .WithMany()
+                        .HasForeignKey("LaborsLaborId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AttachmentType");
-
-                    b.Navigation("Batch");
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Beneficiary", b =>
@@ -1637,6 +2398,241 @@ namespace WelfareDataAccess.Migrations
                     b.Navigation("RelativeRelationType");
 
                     b.Navigation("SocialWelfareRequest");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequest", b =>
+                {
+                    b.OwnsMany("S3.MoL.WelfareManagement.Domain.Entities.StepConfiguration", "StepConfigurations", b1 =>
+                        {
+                            b1.Property<int>("DisbursementRequestId")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("ActionTypeID")
+                                .HasColumnType("int")
+                                .HasComment("Action type for this step");
+
+                            b1.Property<string>("Role")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
+                                .HasComment("Role responsible for this step");
+
+                            b1.HasKey("DisbursementRequestId", "Id");
+
+                            b1.ToTable("DisbursementRequestStepConfiguration", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("DisbursementRequestId");
+                        });
+
+                    b.Navigation("StepConfigurations");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequestAction", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.ActionType", "ActionType")
+                        .WithMany("DisbursementRequestActions")
+                        .HasForeignKey("ActionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequest", "DisbursementRequest")
+                        .WithMany("DisbursementRequestActions")
+                        .HasForeignKey("DisbursementRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequestStep", "DisbursementRequestStep")
+                        .WithMany("DisbursementRequestActions")
+                        .HasForeignKey("DisbursementRequestStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.PaymentChannel", "PaymentChannel")
+                        .WithMany("DisbursementRequestActions")
+                        .HasForeignKey("PaymentChannelId");
+
+                    b.Navigation("ActionType");
+
+                    b.Navigation("DisbursementRequest");
+
+                    b.Navigation("DisbursementRequestStep");
+
+                    b.Navigation("PaymentChannel");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Grant", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Directorate", "Directorate")
+                        .WithMany()
+                        .HasForeignKey("DirectorateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.GrantType", "GrantType")
+                        .WithMany("Grants")
+                        .HasForeignKey("GrantTypeId");
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.PaymentChannel", "PaymentChannel")
+                        .WithMany("Grants")
+                        .HasForeignKey("PaymentChannelId");
+
+                    b.OwnsMany("S3.MoL.WelfareManagement.Domain.Entities.StepConfiguration", "StepConfigurations", b1 =>
+                        {
+                            b1.Property<long>("GrantId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("ActionTypeID")
+                                .HasColumnType("int")
+                                .HasComment("Action type for this step");
+
+                            b1.Property<string>("Role")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
+                                .HasComment("Role responsible for this step");
+
+                            b1.HasKey("GrantId", "Id");
+
+                            b1.ToTable("GrantsStepConfiguration", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("GrantId");
+                        });
+
+                    b.Navigation("Directorate");
+
+                    b.Navigation("GrantType");
+
+                    b.Navigation("PaymentChannel");
+
+                    b.Navigation("StepConfigurations");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantAction", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.ActionType", "ActionType")
+                        .WithMany("GrantActions")
+                        .HasForeignKey("ActionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Grant", "Grant")
+                        .WithMany("GrantActions")
+                        .HasForeignKey("GrantId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.GrantStep", "GrantStep")
+                        .WithMany("GrantActions")
+                        .HasForeignKey("GrantStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WorkflowReason", "WorkflowReason")
+                        .WithMany("GrantActions")
+                        .HasForeignKey("WorkflowReasonId");
+
+                    b.Navigation("ActionType");
+
+                    b.Navigation("Grant");
+
+                    b.Navigation("GrantStep");
+
+                    b.Navigation("WorkflowReason");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantDisbursementRequest", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Grant", "Grant")
+                        .WithOne("GrantDisbursementRequest")
+                        .HasForeignKey("S3.MoL.WelfareManagement.Domain.Entities.GrantDisbursementRequest", "GrantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("S3.MoL.WelfareManagement.Domain.Entities.StepConfiguration", "StepConfigurations", b1 =>
+                        {
+                            b1.Property<int>("GrantDisbursementRequestId")
+                                .HasColumnType("int");
+
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<int>("ActionTypeID")
+                                .HasColumnType("int")
+                                .HasComment("Action type for this step");
+
+                            b1.Property<string>("Role")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
+                                .HasComment("Role responsible for this step");
+
+                            b1.HasKey("GrantDisbursementRequestId", "Id");
+
+                            b1.ToTable("GrantDisbursementRequestStepConfiguration", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("GrantDisbursementRequestId");
+                        });
+
+                    b.Navigation("Grant");
+
+                    b.Navigation("StepConfigurations");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantDisbursementRequestAction", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.ActionType", "ActionType")
+                        .WithMany("GrantDisbursementRequestActions")
+                        .HasForeignKey("ActionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequestStep", "DisbursementRequestStep")
+                        .WithMany("GrantDisbursementRequestActions")
+                        .HasForeignKey("DisbursementRequestStepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.GrantDisbursementRequest", "GrantDisbursementRequest")
+                        .WithMany("DisbursementRequestActions")
+                        .HasForeignKey("GrantDisbursementRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.PaymentChannel", "PaymentChannel")
+                        .WithMany("GrantDisbursementRequestActions")
+                        .HasForeignKey("PaymentChannelId");
+
+                    b.Navigation("ActionType");
+
+                    b.Navigation("DisbursementRequestStep");
+
+                    b.Navigation("GrantDisbursementRequest");
+
+                    b.Navigation("PaymentChannel");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantType", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.GrantCategory", null)
+                        .WithMany("GrantTypes")
+                        .HasForeignKey("GrantCategoryId");
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Labor", b =>
@@ -1680,21 +2676,6 @@ namespace WelfareDataAccess.Migrations
                     b.Navigation("Occupation");
                 });
 
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MedicalWelfareRequest", b =>
-                {
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BeneficiaryType", "BeneficiaryType")
-                        .WithMany("MedicalWelfareRequests")
-                        .HasForeignKey("BeneficiaryTypeId");
-
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.MedicalServiceProvider", "MedicalServiceProvider")
-                        .WithMany("MedicalWelfareRequests")
-                        .HasForeignKey("MedicalServiceProviderId");
-
-                    b.Navigation("BeneficiaryType");
-
-                    b.Navigation("MedicalServiceProvider");
-                });
-
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Memorandum", b =>
                 {
                     b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.RequestType", "RequestTypeNavigation")
@@ -1704,25 +2685,6 @@ namespace WelfareDataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("RequestTypeNavigation");
-                });
-
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MemorandumAttachment", b =>
-                {
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.AttachmentType", "AttachmentType")
-                        .WithMany("MemorandumAttachments")
-                        .HasForeignKey("AttachmentTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Memorandum", "Memorandum")
-                        .WithMany("MemorandumAttachments")
-                        .HasForeignKey("MemorandumId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AttachmentType");
-
-                    b.Navigation("Memorandum");
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Party", b =>
@@ -1736,15 +2698,46 @@ namespace WelfareDataAccess.Migrations
                     b.Navigation("PartyType");
                 });
 
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareLocalAction", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareLocalActionType", "WelfareLocalActionType")
+                        .WithMany("WelfareLocalActions")
+                        .HasForeignKey("WelfareLocalActionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", "WelfareRequest")
+                        .WithMany("WelfareLocalActions")
+                        .HasForeignKey("WelfareRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WorkflowReason", "WorkflowReason")
+                        .WithMany("WelfareLocalActions")
+                        .HasForeignKey("WorkflowReasonId");
+
+                    b.Navigation("WelfareLocalActionType");
+
+                    b.Navigation("WelfareRequest");
+
+                    b.Navigation("WorkflowReason");
+                });
+
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", b =>
                 {
-                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BatchRequest", "Batch")
-                        .WithMany("WelfareRequests")
-                        .HasForeignKey("BatchId");
-
                     b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Directorate", "Directorate")
                         .WithMany("WelfareRequests")
                         .HasForeignKey("DirectorateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequest", "DisbursementRequest")
+                        .WithMany("WelfareRequests")
+                        .HasForeignKey("DisbursementId");
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.Labor", "Labor")
+                        .WithMany("WelfareRequests")
+                        .HasForeignKey("LaborId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1757,6 +2750,10 @@ namespace WelfareDataAccess.Migrations
                         .HasForeignKey("RequestStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.ServiceDeliveryMethod", "ServiceDeliveryMethod")
+                        .WithMany("WelfareRequests")
+                        .HasForeignKey("ServiceDeliveryMethodId");
 
                     b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequestStatus", "WelfareRequestStatus")
                         .WithMany("WelfareRequests")
@@ -1799,13 +2796,17 @@ namespace WelfareDataAccess.Migrations
                                 .HasForeignKey("WelfareRequestId");
                         });
 
-                    b.Navigation("Batch");
-
                     b.Navigation("Directorate");
+
+                    b.Navigation("DisbursementRequest");
+
+                    b.Navigation("Labor");
 
                     b.Navigation("Memorandum");
 
                     b.Navigation("RequestStatus");
+
+                    b.Navigation("ServiceDeliveryMethod");
 
                     b.Navigation("StepConfigurations");
 
@@ -1901,6 +2902,25 @@ namespace WelfareDataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MedicalWelfareRequest", b =>
+                {
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.BeneficiaryType", null)
+                        .WithMany("MedicalWelfareRequests")
+                        .HasForeignKey("BeneficiaryTypeId");
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.MedicalServiceProvider", "MedicalServiceProvider")
+                        .WithMany("MedicalWelfareRequests")
+                        .HasForeignKey("MedicalServiceProviderId");
+
+                    b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", null)
+                        .WithOne()
+                        .HasForeignKey("S3.MoL.WelfareManagement.Domain.Entities.MedicalWelfareRequest", "WelfareRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MedicalServiceProvider");
+                });
+
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.SocialWelfareRequest", b =>
                 {
                     b.HasOne("S3.MoL.WelfareManagement.Domain.Entities.RelativeRelationship", "RelativeRelationship")
@@ -1924,32 +2944,18 @@ namespace WelfareDataAccess.Migrations
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.ActionType", b =>
                 {
-                    b.Navigation("BatchRequestActions");
+                    b.Navigation("DisbursementRequestActions");
+
+                    b.Navigation("GrantActions");
+
+                    b.Navigation("GrantDisbursementRequestActions");
 
                     b.Navigation("WelfareRequestActions");
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.AttachmentType", b =>
                 {
-                    b.Navigation("BatchRequestAttachments");
-
-                    b.Navigation("MemorandumAttachments");
-
                     b.Navigation("WelfareRequestAttachments");
-                });
-
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequest", b =>
-                {
-                    b.Navigation("BatchRequestActions");
-
-                    b.Navigation("BatchRequestAttachments");
-
-                    b.Navigation("WelfareRequests");
-                });
-
-            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BatchRequestStep", b =>
-                {
-                    b.Navigation("BatchRequestActions");
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.BeneficiaryType", b =>
@@ -1969,9 +2975,55 @@ namespace WelfareDataAccess.Migrations
                     b.Navigation("WelfareRequests");
                 });
 
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequest", b =>
+                {
+                    b.Navigation("DisbursementRequestActions");
+
+                    b.Navigation("WelfareRequests");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.DisbursementRequestStep", b =>
+                {
+                    b.Navigation("DisbursementRequestActions");
+
+                    b.Navigation("GrantDisbursementRequestActions");
+                });
+
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Gender", b =>
                 {
                     b.Navigation("Labors");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Grant", b =>
+                {
+                    b.Navigation("GrantActions");
+
+                    b.Navigation("GrantDisbursementRequest");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantCategory", b =>
+                {
+                    b.Navigation("GrantTypes");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantDisbursementRequest", b =>
+                {
+                    b.Navigation("DisbursementRequestActions");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantStep", b =>
+                {
+                    b.Navigation("GrantActions");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.GrantType", b =>
+                {
+                    b.Navigation("Grants");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Labor", b =>
+                {
+                    b.Navigation("WelfareRequests");
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.MaritalStatus", b =>
@@ -1986,8 +3038,6 @@ namespace WelfareDataAccess.Migrations
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.Memorandum", b =>
                 {
-                    b.Navigation("MemorandumAttachments");
-
                     b.Navigation("WelfareRequests");
                 });
 
@@ -2004,6 +3054,15 @@ namespace WelfareDataAccess.Migrations
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.PartyType", b =>
                 {
                     b.Navigation("Parties");
+                });
+
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.PaymentChannel", b =>
+                {
+                    b.Navigation("DisbursementRequestActions");
+
+                    b.Navigation("GrantDisbursementRequestActions");
+
+                    b.Navigation("Grants");
                 });
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.RelativeRelationType", b =>
@@ -2031,13 +3090,25 @@ namespace WelfareDataAccess.Migrations
                     b.Navigation("SocialWelfareRequests");
                 });
 
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.ServiceDeliveryMethod", b =>
+                {
+                    b.Navigation("WelfareRequests");
+                });
+
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareCategory", b =>
                 {
                     b.Navigation("WelfareTypes");
                 });
 
+            modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareLocalActionType", b =>
+                {
+                    b.Navigation("WelfareLocalActions");
+                });
+
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WelfareRequest", b =>
                 {
+                    b.Navigation("WelfareLocalActions");
+
                     b.Navigation("WelfareRequestActions");
 
                     b.Navigation("WelfareRequestAttachments");
@@ -2060,7 +3131,9 @@ namespace WelfareDataAccess.Migrations
 
             modelBuilder.Entity("S3.MoL.WelfareManagement.Domain.Entities.WorkflowReason", b =>
                 {
-                    b.Navigation("BatchRequestActions");
+                    b.Navigation("GrantActions");
+
+                    b.Navigation("WelfareLocalActions");
 
                     b.Navigation("WelfareRequestActions");
                 });

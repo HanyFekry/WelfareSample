@@ -15,135 +15,19 @@
    "T4TemplatePath": "",
    "Tables": [
       {
-         "Name": "[dbo].[ActionType]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[AttachmentType]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[BatchRequest]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[BatchRequestAction]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[BatchRequestAttachment]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[BatchRequestStep]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Beneficiary]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[BusinessNature]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Directorate]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[DisabilityWelfareRequest]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Gender]",
+         "Name": "[dbo].[MedicalWelfareRequest]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Labor]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[MaritalStatus]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Memorandum]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[MemorandumAttachments]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[NotificationReceiverType]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Occupation]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Party]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[PartyType]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[RelativeRelationship]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[RelativeRelationType]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[RequesterRelevance]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[RequestStatus]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[RequestType]",
+         "Name": "[dbo].[ServiceDeliveryMethod]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[SocialWelfareRequest]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[WelfareCategory]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[WelfareRequest]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[WelfareRequestAction]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[WelfareRequestAttachment]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[WelfareRequestStep]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[WelfareType]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[WelfareTypesAttachmentTypes]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[WorkflowReason]",
          "ObjectType": 0
       }
    ],

@@ -8,24 +8,25 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class MedicalServiceProviderConfiguration : IEntityTypeConfiguration<MedicalServiceProvider>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<MedicalServiceProvider> entity)
+    public partial class MedicalServiceProviderConfiguration : IEntityTypeConfiguration<MedicalServiceProvider>
     {
-        entity.ToTable("MedicalServiceProvider");
+        public void Configure(EntityTypeBuilder<MedicalServiceProvider> entity)
+        {
+            entity.ToTable("MedicalServiceProvider");
 
-        entity.Property(e => e.MedicalServiceProviderId).ValueGeneratedNever();
-        entity.Property(e => e.Code).HasMaxLength(30);
-        entity.Property(e => e.Iban)
-            .HasMaxLength(120)
-            .HasColumnName("IBAN");
-        entity.Property(e => e.Text).HasMaxLength(50);
-        entity.Property(e => e.Text2).HasMaxLength(50);
+            entity.Property(e => e.MedicalServiceProviderId).ValueGeneratedNever();
+            entity.Property(e => e.Code).HasMaxLength(30);
+            entity.Property(e => e.Iban)
+                .HasMaxLength(120)
+                .HasColumnName("IBAN");
+            entity.Property(e => e.Text).HasMaxLength(50);
+            entity.Property(e => e.Text2).HasMaxLength(50);
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<MedicalServiceProvider> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<MedicalServiceProvider> entity);
 }

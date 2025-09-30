@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 
-
-
 #nullable disable
 
 namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
@@ -37,6 +35,9 @@ public partial class MemorandumConfiguration : IEntityTypeConfiguration<Memorand
             .HasComment("User name of the user who last updated the request record");
         entity.Property(e => e.MemorandumNo)
             .HasMaxLength(18);
+        entity.Property(e => e.MemorandumAttachmentPath)
+            .HasMaxLength(200)
+            .HasComment("path of memorandum Attachment");
 
         entity.HasOne(d => d.RequestTypeNavigation)
             .WithMany(

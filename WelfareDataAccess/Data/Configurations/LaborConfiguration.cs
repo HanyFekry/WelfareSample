@@ -38,13 +38,14 @@ public partial class LaborConfiguration : IEntityTypeConfiguration<Labor>
         entity.Property(e => e.MaritalStatusId).HasColumnName("FK_MaritalStatusID");
         entity.Property(e => e.OccupationId).HasColumnName("FK_OccupationID");
         entity.Property(e => e.FullName).HasMaxLength(200);
+        entity.Property(e => e.ExclusionReason).HasMaxLength(200);
         entity.Property(e => e.InsuranceNo)
             .HasMaxLength(9)
             .IsUnicode(false)
             .IsFixedLength();
         entity.Property(e => e.IsBeneficiary)
             .HasComputedColumnSql(
-                "CASE WHEN [DeathDate] IS NOT NULL OR [HasFullDisability] = 1 THEN CAST(0 AS bit) ELSE CAST(1 AS bit) END",
+                "case when [DeathDate] IS NOT NULL OR [HasFullDisability]=(1) OR ([InsuranceSectorId] != 4 AND [InsuranceSectorId] != 9 AND [InsuranceSectorId] != NULL) OR [ExclusionReason] IS NOT NULL then CONVERT([bit],(0)) else CONVERT([bit],(1)) end",
                 stored: true
             )
             .HasComment("the worker's status must be Beneficiary or  Not Beneficiary, default is Beneficiary(1)");

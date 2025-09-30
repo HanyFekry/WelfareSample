@@ -22,7 +22,7 @@ namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
             entity.Property(e => e.Text).HasMaxLength(50);
             entity.Property(e => e.Text2).HasMaxLength(50);
 
-            entity.HasMany(x => x.BatchRequestSteps).WithMany(x => x.ActionTypes);
+            entity.HasMany(x => x.DisbursementRequestSteps).WithMany(x => x.ActionTypes);
             entity.HasMany(x => x.WelfareRequestSteps).WithMany(x => x.ActionTypes);
 
             OnConfigurePartial(entity);

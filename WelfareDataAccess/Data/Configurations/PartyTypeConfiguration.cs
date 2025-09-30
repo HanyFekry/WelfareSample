@@ -8,27 +8,28 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class PartyTypeConfiguration : IEntityTypeConfiguration<PartyType>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<PartyType> entity)
+    public partial class PartyTypeConfiguration : IEntityTypeConfiguration<PartyType>
     {
-        entity.ToTable("PartyType");
+        public void Configure(EntityTypeBuilder<PartyType> entity)
+        {
+            entity.ToTable("PartyType");
 
-        entity.Property(e => e.PartyTypeId)
-            .ValueGeneratedNever()
-            .HasColumnName("PartyTypeID");
-        entity.Property(e => e.Code).HasMaxLength(30);
-        entity.Property(e => e.IsActive)
-            .HasDefaultValue(true)
-            .HasComment("Indicates if the business nature is active");
-        entity.Property(e => e.IsDeleted).HasComment("Indicates if the business nature is deleted");
-        entity.Property(e => e.Text).HasMaxLength(50);
-        entity.Property(e => e.Text2).HasMaxLength(50);
+            entity.Property(e => e.PartyTypeId)
+                .ValueGeneratedNever()
+                .HasColumnName("PartyTypeID");
+            entity.Property(e => e.Code).HasMaxLength(30);
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasComment("Indicates if the business nature is active");
+            entity.Property(e => e.IsDeleted).HasComment("Indicates if the business nature is deleted");
+            entity.Property(e => e.Text).HasMaxLength(50);
+            entity.Property(e => e.Text2).HasMaxLength(50);
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<PartyType> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<PartyType> entity);
 }

@@ -8,42 +8,41 @@ using S3.MoL.WelfareManagement.Domain.Enums;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class AttachmentTypeConfiguration : IEntityTypeConfiguration<AttachmentType>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<AttachmentType> entity)
+    public partial class AttachmentTypeConfiguration : IEntityTypeConfiguration<AttachmentType>
     {
-        entity.ToTable("AttachmentType", tb => tb.HasComment("Table storing attachment types"));
+        public void Configure(EntityTypeBuilder<AttachmentType> entity)
+        {
+            entity.ToTable("AttachmentType", tb => tb.HasComment("Table storing attachment types"));
 
-        entity.HasIndex(e => e.AttachmentEntityType, "IX_AttachmentType_FK_WelfareTypeID");
+            entity.Property(e => e.AttachmentTypeId)
+                .ValueGeneratedNever()
+                .HasComment("Unique identifier for the attachment type")
+                .HasColumnName("AttachmentTypeID");
+            entity.Property(e => e.Code)
+                .HasMaxLength(30)
+                .HasComment("Code representing the attachment type");
+            entity.Property(e => e.Mandatory).HasComment("Indicates if the attachment type is mandatory");
+            entity.Property(e => e.MaxFileCount).HasComment("Number of files allowed for the attachment type");
+            entity.Property(e => e.MimeTypes)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasComment("Allowed MIME types for the attachment");
+            entity.Property(e => e.SizeLimit).HasComment("Limit on the size of the attachment");
+            entity.Property(e => e.Text)
+                .HasMaxLength(50)
+                .HasComment("English text description of the attachment type");
+            entity.Property(e => e.Text2)
+                .HasMaxLength(50)
+                .HasComment("Arabic text description of the attachment type");
+            //entity.Property(e => e.AttachmentEntityType)
+            //    .HasConversion(x => (int)x, x => (AttachmentEntityTypes)x)
+            //    .HasComment("Enum value(WelfareRequest,Memorandum,Disbursement)"); ;
 
-        entity.Property(e => e.AttachmentTypeId)
-            .ValueGeneratedNever()
-            .HasComment("Unique identifier for the attachment type")
-            .HasColumnName("AttachmentTypeID");
-        entity.Property(e => e.Code)
-            .HasMaxLength(30)
-            .HasComment("Code representing the attachment type");
-        entity.Property(e => e.Mandatory).HasComment("Indicates if the attachment type is mandatory");
-        entity.Property(e => e.MaxFileCount).HasComment("Number of files allowed for the attachment type");
-        entity.Property(e => e.MimeTypes)
-            .HasMaxLength(200)
-            .IsUnicode(false)
-            .HasComment("Allowed MIME types for the attachment");
-        entity.Property(e => e.SizeLimit).HasComment("Limit on the size of the attachment");
-        entity.Property(e => e.Text)
-            .HasMaxLength(50)
-            .HasComment("English text description of the attachment type");
-        entity.Property(e => e.Text2)
-            .HasMaxLength(50)
-            .HasComment("Arabic text description of the attachment type");
-        entity.Property(e => e.AttachmentEntityType)
-            .HasConversion(x => (int)x, x => (AttachmentEntityType)x)
-            .HasComment("Enum value(WelfareRequest,Memorandum,Batch)"); ;
+            OnConfigurePartial(entity);
+        }
 
-        OnConfigurePartial(entity);
+        partial void OnConfigurePartial(EntityTypeBuilder<AttachmentType> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<AttachmentType> entity);
 }

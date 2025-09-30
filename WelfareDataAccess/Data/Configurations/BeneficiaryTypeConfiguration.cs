@@ -8,21 +8,22 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace S3.MoL.WelfareManagement.Domain.Data.Configurations;
-
-public partial class BeneficiaryTypeConfiguration : IEntityTypeConfiguration<BeneficiaryType>
+namespace S3.MoL.WelfareManagement.Domain.Data.Configurations
 {
-    public void Configure(EntityTypeBuilder<BeneficiaryType> entity)
+    public partial class BeneficiaryTypeConfiguration : IEntityTypeConfiguration<BeneficiaryType>
     {
-        entity.ToTable("BeneficiaryType");
+        public void Configure(EntityTypeBuilder<BeneficiaryType> entity)
+        {
+            entity.ToTable("BeneficiaryType");
 
-        entity.Property(e => e.BeneficiaryTypeId).ValueGeneratedNever();
-        entity.Property(e => e.Code).HasMaxLength(30);
-        entity.Property(e => e.Text).HasMaxLength(50);
-        entity.Property(e => e.Text2).HasMaxLength(50);
+            entity.Property(e => e.BeneficiaryTypeId).ValueGeneratedNever();
+            entity.Property(e => e.Code).HasMaxLength(30);
+            entity.Property(e => e.Text).HasMaxLength(50);
+            entity.Property(e => e.Text2).HasMaxLength(50);
 
-        OnConfigurePartial(entity);
+            OnConfigurePartial(entity);
+        }
+
+        partial void OnConfigurePartial(EntityTypeBuilder<BeneficiaryType> entity);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<BeneficiaryType> entity);
 }
